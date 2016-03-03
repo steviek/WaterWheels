@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        style="@style/Toolbar"
+        android:id="@+id/toolbar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/timestamp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/toolbar_text_size"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:layout_toLeftOf="@+id/price"
+            android:text="Today @ 13:00" />
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$15"
+            android:textSize="@dimen/toolbar_text_size"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:layout_marginRight="16dp"
+            android:layout_alignParentRight="true" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp">
+
+            <TextView
+                android:id="@+id/click_post"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/click_post"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:padding="8dp"
+                android:gravity="center" />
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/post_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="8dp"
+                app:cardBackgroundColor="#fff"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="4dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingBottom="8dp">
+
+                    <ImageView
+                        android:id="@+id/profile_image"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp" />
+
+                    <TextView
+                        android:id="@+id/profile_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/profile_image"
+                        android:text="Lucy Goosey"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="4dp"
+                        android:textColor="#2C4388" />
+
+                    <TextView
+                        android:id="@+id/post_created_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/profile_name"
+                        android:layout_toRightOf="@+id/profile_image"
+                        android:text="5 hours ago"
+                        android:textSize="14sp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="4dp"
+                        android:textColor="@color/textSecondary" />
+
+                    <TextView
+                        android:id="@+id/message"
+                        android:layout_below="@+id/post_created_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/textPrimary"
+                        android:textSize="16sp"
+                        android:text="Source post" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <LinearLayout
+                android:id="@+id/phone_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    style="@style/Button.Call"
+                    android:id="@+id/call_btn"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:gravity="center"
+                    android:textSize="28sp"
+                    android:drawableLeft="@drawable/ic_phone"
+                    android:text="@string/call"
+                    android:layout_marginRight="8dp" />
+
+                <TextView
+                    style="@style/Button.Text"
+                    android:id="@+id/text_btn"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:gravity="center"
+                    android:textSize="28sp"
+                    android:layout_marginLeft="8dp"
+                    android:drawableLeft="@drawable/ic_text"
+                    android:text="@string/text" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:id="@+id/origin"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="From: Waterloo"
+                    android:textColor="@color/textPrimary"
+                    android:gravity="center_horizontal"
+                    android:textSize="18sp"
+                    android:layout_marginLeft="16dp" />
+
+                <TextView
+                    android:id="@+id/destination"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="To: Toronto"
+                    android:textColor="@color/textPrimary"
+                    android:textSize="18sp"
+                    android:layout_marginRight="16dp" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/map"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

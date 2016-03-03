@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">WaterWheels</string>
+
+    <string name="today_at_x">Today at %1$s</string>
+    <string name="tomorrow_at_x">Tomorrow at %1$s</string>
+    <string name="x_at_y">%1$s at %2$s</string>
+    <string name="from_x">From: %1$s</string>z
+    <string name="to_x">To: %1$s</string>
+    <string name="a_to_b">%1$s to %2$s</string>
+    <string name="loading_message">Fetching and analyzing posts from Facebook&#8230;</string>
+    <string name="call">Call</string>
+    <string name="text">Text</string>
+    <string name="few_seconds_ago">A few seconds ago</string>
+    <string name="click_post">Click the post to view it on Facebook!</string>
+
+    <plurals name="x_mins">
+        <item quantity="one">%d min</item>
+        <item quantity="other">%d mins</item>
+    </plurals>
+
+    <plurals name="x_hrs">
+        <item quantity="one">%d hr</item>
+        <item quantity="other">%d hrs</item>
+    </plurals>
+
+    <string name="yesterday_at_x">Yesterday at %1$s</string>
+    <string name="x_at_x">%1$s at %2$s</string>
+    <string name="must_be_waterloo">You must be a Waterloo student to use this app!</string>
+    <string name="better_way">A better way to carpool</string>
+    <string name="no_network_connection">No network connection found</string>
+    <string name="content_updated">Rides updated</string>
+    <string name="filter">Filter</string>
+    <string name="close">Close</string>
+    <string name="clear">Clear</string>
+    <string name="showing_all_rides">Showing All Rides</string>
+    <string-array name="before_after">
+        <item>Before</item>
+        <item>After</item>
+    </string-array>
+</resources>

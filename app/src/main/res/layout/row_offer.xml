@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_marginTop="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="64dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_width="@dimen/photo_diameter_small"
+            android:layout_height="@dimen/photo_diameter_small"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_centerVertical="true"
+            app:civ_border_width="2dp"
+            app:civ_border_color="#FF000000"/>
+
+
+        <TextView
+            android:id="@+id/timestamp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/price"
+            android:layout_toRightOf="@+id/profile_image"
+            android:text="Today @ 13:00"
+            android:layout_centerVertical="true"
+            android:textSize="20sp"
+            android:padding="8dp" />
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textSize="20sp"
+            android:layout_marginRight="16dp"
+            android:layout_centerVertical="true"
+            android:text="$15"/>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp">
+
+        <TextView
+            android:id="@+id/origin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/arrow_right"
+            android:gravity="center_vertical|left"
+            android:layout_marginLeft="16dp"
+            android:layout_centerVertical="true"
+            android:textSize="22sp"
+            android:textColor="@android:color/black"
+            android:text="Waterloo" />
+
+        <ImageView
+            android:id="@+id/arrow_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_right"
+            android:layout_centerInParent="true"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/destination"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/arrow_right"
+            android:gravity="center_vertical|right"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:textSize="22sp"
+            android:textColor="@android:color/black"
+            android:text="Toronto" />
+
+
+    </RelativeLayout>
+
+</LinearLayout>

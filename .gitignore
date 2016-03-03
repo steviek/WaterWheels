@@ -1,0 +1,8 @@
+.gradle
+/local.properties
+/.idea/
+.DS_Store
+/build
+*.iml
+SecretKeys.java
+secret_strings.xml

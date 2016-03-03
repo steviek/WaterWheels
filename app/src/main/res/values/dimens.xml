@@ -1,0 +1,5 @@
+<resources>
+    <dimen name="photo_diameter_small">60dp</dimen>
+    <dimen name="photo_diameter_big">90dp</dimen>
+    <dimen name="toolbar_text_size">18sp</dimen>
+</resources>

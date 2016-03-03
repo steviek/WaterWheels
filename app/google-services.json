@@ -1,0 +1,45 @@
+{
+  "project_info": {
+    "project_id": "waterwheels-875f3",
+    "project_number": "132165763851",
+    "name": "WaterWheels"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:132165763851:android:e18d4a053a123162",
+        "client_id": "android:com.sixbynine.waterwheels",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.sixbynine.waterwheels"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-66841473-4"
+          }
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 1
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
