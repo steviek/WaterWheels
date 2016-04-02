@@ -117,7 +117,6 @@ public final class MainFragment extends BaseFragment {
 
                 mListView.setEnabled(true);
                 if (mListView.getAdapter() == null) {
-                    // todo re-implement filtering
                     Iterable<Offer> offers = OfferDbManager.getInstance().getOffers();
                     mListView.setAdapter(new FeedAdapter(getContext(), ImmutableList.copyOf(offers)));
                 }

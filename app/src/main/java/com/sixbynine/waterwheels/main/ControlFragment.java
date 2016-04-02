@@ -46,7 +46,9 @@ public final class ControlFragment extends BaseFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(Keys.SELECTED_INDEX, mPager.getCurrentItem());
+        if (mPager != null) {
+            outState.putInt(Keys.SELECTED_INDEX, mPager.getCurrentItem());
+        }
     }
 
     private static final class MyAdapter extends FragmentStatePagerAdapter

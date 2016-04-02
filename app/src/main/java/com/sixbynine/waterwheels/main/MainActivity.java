@@ -47,10 +47,8 @@ public final class MainActivity extends BaseActivity implements OnOfferClickList
         }
 
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
-        Fragment fragment;
-        if (fragments != null) {
-            fragment = fragments.get(0);
-        } else {
+        if (fragments == null) {
+            Fragment fragment;
             switch (state) {
                 case LOGIN:
                     fragment = new LoginFragment();
@@ -65,10 +63,8 @@ public final class MainActivity extends BaseActivity implements OnOfferClickList
                 default:
                     throw new IllegalStateException("Unexpected state: " + state);
             }
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
         }
-
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
     }
 
     @Override
