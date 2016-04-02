@@ -33,8 +33,20 @@
     <string name="close">Close</string>
     <string name="clear">Clear</string>
     <string name="showing_all_rides">Showing All Rides</string>
+    <string name="auto_refresh">Auto-Refresh</string>
+    <string name="refresh_in_background">Refresh posts in the background</string>
+    <string name="wifi_only">Wifi only</string>
+    <string name="account">Account</string>
     <string-array name="before_after">
         <item>Before</item>
         <item>After</item>
     </string-array>
+
+    <string name="origin">Origin</string>
+    <string name="destination">Destination</string>
+
+    <string name="new_version">New Features In This Version</string>
+    <string name="new_features_version_3">
+        &#8226; Tab layout\n&#8226; Auto-refresh (enable in settings)\n&#8226; Bug fixes
+    </string>
 </resources>

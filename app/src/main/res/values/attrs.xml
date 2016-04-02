@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CheckableTextView">
+        <attr name="ctvLines" format="enum">
+            <enum name="one" value="1"/>
+            <enum name="two" value="2"/>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="HeaderSubheaderView">
+        <attr name="hsvHeaderText" format="string"/>
+        <attr name="hsvSubHeaderText" format="string"/>
+    </declare-styleable>
+</resources>

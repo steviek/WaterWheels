@@ -1,4 +1,4 @@
-package com.sixbynine.waterwheels.main;
+package com.sixbynine.waterwheels.filter;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -9,52 +9,75 @@ import com.sixbynine.waterwheels.util.Prefs;
 
 import java.util.concurrent.TimeUnit;
 
-public final class MainFragmentState implements Parcelable {
+public final class FilterFragmentState implements Parcelable {
 
     private PlaceChoice origin;
     private PlaceChoice destination;
     private long timeStart;
     private long timeEnd;
-    private boolean filterOpen;
 
     public PlaceChoice getOrigin() {
         return origin;
     }
 
-    public void setOrigin(PlaceChoice origin) {
+    /**
+     * Sets the specified PlaceChoice as the origin.
+     * @return true if this changed the state, false otherwise
+     */
+    public boolean setOrigin(PlaceChoice origin) {
+        if (origin.equals(this.origin)) {
+            return false;
+        }
         this.origin = origin;
+        return true;
     }
 
     public PlaceChoice getDestination() {
         return destination;
     }
 
-    public void setDestination(PlaceChoice destination) {
+    /**
+     * Sets the specified PlaceChoice as the destination.
+     * @return true if this changed the state, false otherwise
+     */
+    public boolean setDestination(PlaceChoice destination) {
+        if (destination.equals(this.destination)) {
+            return false;
+        }
         this.destination = destination;
+        return true;
     }
 
     public long getTimeStart() {
         return timeStart;
     }
 
-    public void setTimeStart(long timeStart) {
+    /**
+     * Sets the given long as the start time
+     * @return true if this changed the state, false otherwise
+     */
+    public boolean setTimeStart(long timeStart) {
+        if (timeStart == this.timeStart) {
+            return false;
+        }
         this.timeStart = timeStart;
+        return true;
     }
 
     public long getTimeEnd() {
         return timeEnd;
     }
 
-    public void setTimeEnd(long timeEnd) {
+    /**
+     * Sets the given long as the end time
+     * @return true if this changed the state, false otherwise
+     */
+    public boolean setTimeEnd(long timeEnd) {
+        if (timeEnd == this.timeEnd) {
+            return false;
+        }
         this.timeEnd = timeEnd;
-    }
-
-    public boolean isFilterOpen() {
-        return filterOpen;
-    }
-
-    public void setFilterOpen(boolean filterOpen) {
-        this.filterOpen = filterOpen;
+        return true;
     }
 
     @Override
@@ -74,13 +97,12 @@ public final class MainFragmentState implements Parcelable {
         }
         dest.writeLong(timeStart);
         dest.writeLong(timeEnd);
-        dest.writeInt(filterOpen ? 1 : 0);
     }
 
-    public static final Creator<MainFragmentState> CREATOR = new Creator<MainFragmentState>() {
+    public static final Creator<FilterFragmentState> CREATOR = new Creator<FilterFragmentState>() {
         @Override
-        public MainFragmentState createFromParcel(Parcel source) {
-            MainFragmentState state = new MainFragmentState();
+        public FilterFragmentState createFromParcel(Parcel source) {
+            FilterFragmentState state = new FilterFragmentState();
             if (source.readInt() == 1) {
                 state.setOrigin((PlaceChoice) source.readParcelable(PlaceChoice.class.getClassLoader()));
             }
@@ -89,18 +111,17 @@ public final class MainFragmentState implements Parcelable {
             }
             state.setTimeStart(source.readLong());
             state.setTimeEnd(source.readLong());
-            state.setFilterOpen(source.readInt() == 1);
             return state;
         }
 
         @Override
-        public MainFragmentState[] newArray(int size) {
-            return new MainFragmentState[size];
+        public FilterFragmentState[] newArray(int size) {
+            return new FilterFragmentState[size];
         }
     };
 
-    static MainFragmentState getState() {
-        MainFragmentState state = new MainFragmentState();
+    static FilterFragmentState getState() {
+        FilterFragmentState state = new FilterFragmentState();
         long savedTime = Prefs.getLong("state:saved");
         long tenMinutesAgo = System.currentTimeMillis() - TimeUnit.MILLISECONDS.convert(10, TimeUnit.MINUTES);
         // save the last filter for 10 minutes
@@ -109,30 +130,27 @@ public final class MainFragmentState implements Parcelable {
             state.destination = PlaceChoice.fromPrefs("state:destination");
             state.timeStart = Prefs.getLong("state:start");
             state.timeEnd = Prefs.getLong("state:end");
-            state.filterOpen = Prefs.getBoolean("state:open");
         }
         Logger.d("GetState: %s", state.toString());
         return state;
     }
 
-    static void saveState(MainFragmentState state) {
+    static void saveState(FilterFragmentState state) {
         Logger.d("SaveState: %s", state.toString());
         Prefs.putLong("state:saved", System.currentTimeMillis());
         PlaceChoice.saveToPrefs(state.origin, "state:origin");
         PlaceChoice.saveToPrefs(state.destination, "state:destination");
         Prefs.putLong("state:start", state.timeStart);
         Prefs.putLong("state:end", state.timeEnd);
-        Prefs.putBoolean("state:open", state.filterOpen);
     }
 
     @Override
     public String toString() {
-        return "MainFragmentState{" +
+        return "FilterFragmentState{" +
                 "origin=" + origin +
                 ", destination=" + destination +
                 ", timeStart=" + timeStart +
                 ", timeEnd=" + timeEnd +
-                ", filterOpen=" + filterOpen +
                 '}';
     }
 }

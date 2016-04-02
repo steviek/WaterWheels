@@ -24,4 +24,36 @@ public class Utils {
         }
         return a;
     }
+
+    /**
+     * Returns the logical OR of the boolean clauses.  This method can be used with statements are parameters to ensure
+     * that all statements are executed, which is not guaranteed inline due to Java short-circuit logic.
+     */
+    public static boolean or(boolean b1) {
+        return or(b1, false);
+    }
+
+    /**
+     * Returns the logical OR of the boolean clauses.  This method can be used with statements are parameters to ensure
+     * that all statements are executed, which is not guaranteed inline due to Java short-circuit logic.
+     */
+    public static boolean or(boolean b1, boolean b2) {
+        return or(b1, b2, false);
+    }
+
+    /**
+     * Returns the logical OR of the boolean clauses.  This method can be used with statements are parameters to ensure
+     * that all statements are executed, which is not guaranteed inline due to Java short-circuit logic.
+     */
+    public static boolean or(boolean b1, boolean b2, boolean b3) {
+        return or(b1, b2, b3, false);
+    }
+
+    /**
+     * Returns the logical OR of the boolean clauses.  This method can be used with statements are parameters to ensure
+     * that all statements are executed, which is not guaranteed inline due to Java short-circuit logic.
+     */
+    public static boolean or(boolean b1, boolean b2, boolean b3, boolean b4) {
+        return b1 || b2 || b3 || b4;
+    }
 }

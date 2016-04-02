@@ -8,18 +8,19 @@ import com.facebook.appevents.AppEventsLogger;
 import com.sixbynine.waterwheels.BaseActivity;
 import com.sixbynine.waterwheels.LoginFragment;
 import com.sixbynine.waterwheels.R;
+import com.sixbynine.waterwheels.VersionUpdate;
 import com.sixbynine.waterwheels.manager.FacebookManager;
 import com.sixbynine.waterwheels.model.Offer;
+import com.sixbynine.waterwheels.offerdisplay.DisplayFragment;
+import com.sixbynine.waterwheels.offerdisplay.OnOfferClickListener;
 import com.sixbynine.waterwheels.util.Keys;
 
 import java.util.List;
 
-public final class MainActivity extends BaseActivity implements MainFragment.Callback {
+public final class MainActivity extends BaseActivity implements OnOfferClickListener {
 
     private State state;
     private Offer displayOffer;
-
-    private Fragment mainFragment;
 
     private enum State {
         LOGIN, LIST, DISPLAY
@@ -55,8 +56,8 @@ public final class MainActivity extends BaseActivity implements MainFragment.Cal
                     fragment = new LoginFragment();
                     break;
                 case LIST:
-                    mainFragment = new MainFragment();
-                    fragment = mainFragment;
+                    fragment = new ControlFragment();
+                    VersionUpdate.showDialogIfAppropriate(this);
                     break;
                 case DISPLAY:
                     fragment = DisplayFragment.newInstance(displayOffer);
@@ -65,6 +66,7 @@ public final class MainActivity extends BaseActivity implements MainFragment.Cal
                     throw new IllegalStateException("Unexpected state: " + state);
             }
         }
+
 
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
     }
@@ -83,7 +85,7 @@ public final class MainActivity extends BaseActivity implements MainFragment.Cal
 
         if (state == State.LOGIN && FacebookManager.getInstance().isLoggedIn()) {
             state = State.DISPLAY;
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new MainFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new ControlFragment()).commit();
         }
     }
 
@@ -96,12 +98,7 @@ public final class MainActivity extends BaseActivity implements MainFragment.Cal
     @Override
     public void onBackPressed() {
         if (state == State.DISPLAY) {
-            displayOffer = null;
-            if (mainFragment == null) {
-                mainFragment = new MainFragment();
-            }
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mainFragment).commit();
-            state = State.LIST;
+            navigateBackFromDisplay();
         } else {
             super.onBackPressed();
         }
@@ -112,24 +109,33 @@ public final class MainActivity extends BaseActivity implements MainFragment.Cal
         switch (item.getItemId()) {
             case android.R.id.home:
                 if (state == State.DISPLAY) {
-                    displayOffer = null;
-                    if (mainFragment == null) {
-                        mainFragment = new MainFragment();
-                    }
-                    getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mainFragment).commit();
-                    state = State.LIST;
+                    navigateBackFromDisplay();
                 }
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    private void navigateBackFromDisplay() {
+        displayOffer = null;
+
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new ControlFragment()).commit();
+        }
+
+        state = State.LIST;
+    }
+
     @Override
-    public void onOfferClicked(Offer offer) {
+    public void onOfferClick(Offer offer) {
         displayOffer = offer;
         state = State.DISPLAY;
-        getSupportFragmentManager().beginTransaction().replace(
-                R.id.content_frame,
-                DisplayFragment.newInstance(displayOffer)).commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, DisplayFragment.newInstance(displayOffer))
+                .addToBackStack("display")
+                .commit();
     }
 }

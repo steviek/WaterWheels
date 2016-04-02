@@ -27,4 +27,59 @@
 
     </style>
 
+    <style name="Settings"></style>
+
+    <style name="Settings.Header">
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Settings.CheckableTextView">
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:checkMark">?android:attr/textCheckMark</item>
+    </style>
+
+    <style name="Settings.CheckableTextViewInner">
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingLeft">32dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:checkMark">?android:attr/textCheckMark</item>
+    </style>
+
+    <style name="Tabs">
+        <item name="pstsIndicatorColor">@android:color/white</item>
+        <item name="pstsShouldExpand">true</item>
+        <item name="pstsIndicatorHeight">2dp</item>
+    </style>
+
+    <style name="Filter"/>
+    <style name="Filter.Hint">
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:minWidth">120dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+
+    <style name="Filter.TextButton">
+        <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+
 </resources>

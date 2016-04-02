@@ -1,12 +1,6 @@
 package com.sixbynine.waterwheels.manager;
 
-import android.annotation.TargetApi;
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
-import android.content.ComponentName;
-import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 
 import com.facebook.AccessToken;
@@ -16,7 +10,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.login.LoginResult;
-import com.sixbynine.waterwheels.BackgroundPollService;
+import com.sixbynine.waterwheels.BuildConfig;
 import com.sixbynine.waterwheels.MyApplication;
 import com.sixbynine.waterwheels.R;
 import com.sixbynine.waterwheels.data.OfferDbManager;
@@ -33,12 +27,13 @@ import com.squareup.otto.Subscribe;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public final class FacebookManager implements FacebookCallback<LoginResult> {
 
-    private static final FacebookManager INSTANCE = new FacebookManager();
+    private static FacebookManager instance;
     private static final String CARPOOL_GROUP_ID = "372772186164295";
 
     private boolean makingGroupRequest;
@@ -51,7 +46,14 @@ public final class FacebookManager implements FacebookCallback<LoginResult> {
     }
 
     public static FacebookManager getInstance() {
-        return INSTANCE;
+        if (instance == null) {
+            synchronized (FacebookManager.class) {
+                if (instance == null) {
+                    instance = new FacebookManager();
+                }
+            }
+        }
+        return instance;
     }
 
     public enum Status {
@@ -85,10 +87,6 @@ public final class FacebookManager implements FacebookCallback<LoginResult> {
         makeGroupPostsRequest(true);
     }
 
-    public void refreshGroupPostsIfNecessary() {
-        makeGroupPostsRequest(false);
-    }
-
     @Subscribe
     public void onDatabaseUpgradedEvent(DatabaseUpgradedEvent event) {
         makeGroupPostsRequest(false);
@@ -107,10 +105,6 @@ public final class FacebookManager implements FacebookCallback<LoginResult> {
 
         if (OfferDbManager.getInstance().getState() == OfferDbManager.State.UPDGRADING) {
             return;
-        }
-
-        if (getBackgroundJobStatus() == BackgroundJobStatus.NONE) {
-            scheduleJob(false);
         }
 
         final long queryTime = System.currentTimeMillis();
@@ -146,6 +140,13 @@ public final class FacebookManager implements FacebookCallback<LoginResult> {
                                     Logger.d("Posts contained %d offers", offers.size());
                                     OfferDbManager.getInstance().storeOffers(offers);
                                     Prefs.putLong(Keys.LAST_UPDATED, queryTime);
+
+                                    if (BuildConfig.DEBUG) {
+                                        String updateLog = Prefs.getString(Keys.UPDATE_LOG, "");
+                                        Prefs.putString(Keys.UPDATE_LOG, updateLog
+                                                + new SimpleDateFormat("H:mm").format(queryTime) + "\n");
+                                    }
+
                                     status = FacebookManager.Status.LOADED;
                                     return null;
                                 }
@@ -176,37 +177,6 @@ public final class FacebookManager implements FacebookCallback<LoginResult> {
             Logger.d("Updated within last half hour");
             status = Status.LOADED;
             MyApplication.getInstance().getBus().post(new FeedRequestFinishedEvent());
-        }
-    }
-
-    public enum BackgroundJobStatus {
-        NONE, WIFI_ONLY, ANY
-    }
-
-    public BackgroundJobStatus getBackgroundJobStatus() {
-        return BackgroundJobStatus.valueOf(Prefs.getString(Keys.BACKGROUND_JOB, BackgroundJobStatus.NONE.name()));
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public void scheduleJob(boolean wifiOnly) {
-        Context context = MyApplication.getInstance();
-        JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
-        jobScheduler.cancelAll();
-
-        ComponentName serviceEndpoint = new ComponentName(context, BackgroundPollService.class);
-        JobInfo backgroundPoll = new JobInfo.Builder(1, serviceEndpoint)
-                .setRequiredNetworkType(wifiOnly ? JobInfo.NETWORK_TYPE_UNMETERED : JobInfo.NETWORK_TYPE_ANY)
-                .setPeriodic(TimeUnit.MILLISECONDS.convert(14, TimeUnit.MINUTES))
-                .setPersisted(true)
-                .build();
-
-        int code = jobScheduler.schedule(backgroundPoll);
-        if (code <= 0) {
-            Logger.e("Failed to schedule polling job: error %d", code);
-        } else {
-            Logger.d("Successfully scheduled background job");
-            BackgroundJobStatus status = wifiOnly ? BackgroundJobStatus.WIFI_ONLY : BackgroundJobStatus.ANY;
-            Prefs.putString(Keys.BACKGROUND_JOB, status.name());
         }
     }
 

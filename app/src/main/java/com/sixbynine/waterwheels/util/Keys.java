@@ -13,4 +13,7 @@ public final class Keys {
     public static final String POST_CLICKED = "POST_CLICKED";
     public static final String HAS_SUCCESSFUL_REQUESTS = "HAS_SUCCESSFUL_REQUESTS";
     public static final String ALGORITHM_VERSION = "ALGORITHM_VERSION";
+    public static final String SELECTED_INDEX = "SELECTED_INDEX";
+    public static final String UPDATE_LOG = "UPDATE_LOG";
+    public static final String APP_VERSION = "APP_VERSION";
 }

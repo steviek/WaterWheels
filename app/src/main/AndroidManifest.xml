@@ -4,6 +4,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" android:maxSdkVersion="20"/>
 
     <application
         android:allowBackup="true"
@@ -27,9 +28,19 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:label="@string/app_name" />
 
-        <service android:name=".BackgroundPollService"
+        <service android:name=".autorefresh.AutoRefreshJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
-            android:enabled="@bool/background_service_enabled"/>
+            android:enabled="@bool/job_service_enabled"/>
+        
+        <receiver android:name=".autorefresh.AutoRefreshLegacyReceiver"
+            android:enabled="@bool/legacy_service_enabled"/>
+        
+        <receiver android:name=".autorefresh.AutoRefreshBootReceiver"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
 
     </application>
 

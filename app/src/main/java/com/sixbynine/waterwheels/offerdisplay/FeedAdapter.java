@@ -1,4 +1,4 @@
-package com.sixbynine.waterwheels.main;
+package com.sixbynine.waterwheels.offerdisplay;
 
 import android.content.Context;
 import android.graphics.Bitmap;

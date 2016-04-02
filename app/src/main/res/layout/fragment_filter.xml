@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:paddingTop="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            style="@style/Filter.Hint"
+            android:id="@+id/origin_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/origin" />
+
+        <Spinner
+            android:id="@+id/origin_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            style="@style/Filter.Hint"
+            android:id="@+id/destination_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/destination" />
+
+        <Spinner
+            android:id="@+id/destination_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            style="@style/Filter.Hint"
+            android:id="@+id/time_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time"
+            android:layout_alignParentTop="true"
+            android:gravity="top" />
+
+        <TextView
+            style="@style/Filter.TextButton"
+            android:id="@+id/date_time_start_choice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Feb 9 @ 10PM"
+            android:layout_toRightOf="@+id/time_hint"
+            android:layout_alignBaseline="@+id/time_hint" />
+
+        <TextView
+            style="@style/Filter.TextButton"
+            android:id="@+id/date_time_end_choice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Feb 9 @ 10PM"
+            android:layout_below="@+id/date_time_start_choice"
+            android:layout_toRightOf="@+id/time_hint" />
+
+        <TextView
+            android:id="@+id/btn_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textPrimary"
+            android:textAllCaps="true"
+            android:padding="16dp"
+            android:background="?attr/selectableItemBackground"
+            android:layout_below="@+id/date_time_start_choice"
+            android:layout_alignParentLeft="true"
+
+            android:text="@string/clear"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/dividerColor"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+        <ListView
+            android:id="@+id/list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </FrameLayout>
+
+</LinearLayout>

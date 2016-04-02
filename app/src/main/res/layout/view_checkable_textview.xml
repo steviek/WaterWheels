@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <FrameLayout
+        android:id="@+id/textContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/checkBoxContainer">
+
+        <com.sixbynine.waterwheels.view.HeaderSubheaderView
+            android:id="@+id/two_line_view"
+            android:clickable="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/one_line_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:text="Hello"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/checkBoxContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textContainer"
+        android:layout_alignBottom="@+id/textContainer"
+        android:layout_alignParentRight="true">
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"    />
+
+    </FrameLayout>
+
+
+</merge>

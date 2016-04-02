@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp">
+
+        <TextView
+            style="@style/Settings.Header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/auto_refresh" />
+
+        <com.sixbynine.waterwheels.view.CheckableTextView
+            android:id="@+id/refresh_posts"
+            style="@style/Settings.CheckableTextView"
+            android:text="@string/refresh_in_background"
+            android:background="?attr/selectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.sixbynine.waterwheels.view.CheckableTextView
+            android:id="@+id/wifi_only"
+            style="@style/Settings.CheckableTextViewInner"
+            android:text="@string/wifi_only"
+            android:layout_marginTop="-8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:checked="true"/>
+
+        <TextView
+            android:id="@+id/debug_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"/>
+
+    </LinearLayout>
+</ScrollView>
