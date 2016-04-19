@@ -1,7 +1,20 @@
 package com.sixbynine.waterwheels.manager;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.text.format.DateFormat;
 
 import com.facebook.AccessToken;
 import com.facebook.FacebookCallback;
@@ -14,11 +27,15 @@ import com.sixbynine.waterwheels.BuildConfig;
 import com.sixbynine.waterwheels.MyApplication;
 import com.sixbynine.waterwheels.R;
 import com.sixbynine.waterwheels.data.OfferDbManager;
+import com.sixbynine.waterwheels.data.OfferDbManager.StoreResult;
 import com.sixbynine.waterwheels.events.DatabaseUpgradedEvent;
 import com.sixbynine.waterwheels.events.FeedRequestFinishedEvent;
 import com.sixbynine.waterwheels.events.LoginSuccessEvent;
+import com.sixbynine.waterwheels.filter.FilterFragmentState;
+import com.sixbynine.waterwheels.main.MainActivity;
 import com.sixbynine.waterwheels.model.Offer;
 import com.sixbynine.waterwheels.model.Post;
+import com.sixbynine.waterwheels.settings.NotificationStatus;
 import com.sixbynine.waterwheels.util.Keys;
 import com.sixbynine.waterwheels.util.Logger;
 import com.sixbynine.waterwheels.util.Prefs;
@@ -28,6 +45,7 @@ import com.squareup.otto.Subscribe;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -137,9 +155,15 @@ public final class FacebookManager implements FacebookCallback<LoginResult> {
                                         Prefs.putBoolean(Keys.HAS_SUCCESSFUL_REQUESTS, true);
                                     }
                                     List<Offer> offers = FeedManager.extractOffers(feed);
+
                                     Logger.d("Posts contained %d offers", offers.size());
-                                    OfferDbManager.getInstance().storeOffers(offers);
+                                    StoreResult result = OfferDbManager.getInstance().storeOffers(offers);
                                     Prefs.putLong(Keys.LAST_UPDATED, queryTime);
+
+                                    if (!MainActivity.isInForeground()) {
+                                        Predicate<Offer> filter = FilterFragmentState.getState().getUngenerousPredicate();
+                                        buildNotification(Iterables.filter(result.getNewOffers(), filter));
+                                    }
 
                                     if (BuildConfig.DEBUG) {
                                         String updateLog = Prefs.getString(Keys.UPDATE_LOG, "");
@@ -186,6 +210,73 @@ public final class FacebookManager implements FacebookCallback<LoginResult> {
 
     public static String getProfilePicUrlFromId(String id) {
         long diameter = MyApplication.getInstance().getResources().getDimensionPixelOffset(R.dimen.photo_diameter_big);
-        return "https://graph.facebook.com/" + id + "/picture?type=square&width=" + diameter +"&height=" + diameter;
+        return "https://graph.facebook.com/" + id + "/picture?type=square&width=" + diameter + "&height=" + diameter;
+    }
+
+    private static final SimpleDateFormat sdf24hrShort = new SimpleDateFormat("H:mm");
+    private static final SimpleDateFormat sdf12hrShort = new SimpleDateFormat("h:mm a");
+
+    private void buildNotification(Iterable<Offer> offers) {
+        NotificationStatus notificationStatus = NotificationStatus.get();
+
+        int size = Iterables.size(offers);
+
+        if (size > 0 && notificationStatus.isEnabled()) {
+            Context context = MyApplication.getInstance();
+            boolean is24hr = DateFormat.is24HourFormat(context);
+
+            Offer offer = Iterables.getFirst(offers, null);
+            Date date = new Date(offer.getTime());
+            String formattedTime = is24hr ? sdf24hrShort.format(date) : sdf12hrShort.format(date);
+
+            String title = size == 1
+                    ? context.getString(R.string.new_ride)
+                    : context.getString(R.string.x_new_rides, size);
+
+            String text = context.getString(
+                    size == 1 ? R.string.offer_format : R.string.offer_format_multiple,
+                    offer.getOrigin().getName(),
+                    offer.getDestination().getName(),
+                    formattedTime);
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(MyApplication.getInstance())
+                    .setSmallIcon(R.drawable.ic_notification)
+                    .setContentTitle(title)
+                    .setContentText(text);
+
+            if (notificationStatus.shouldLight()) {
+                builder.setLights(Color.YELLOW, 3000, 3000);
+            }
+
+            if (notificationStatus.shouldSound()) {
+                Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                builder.setSound(alarmSound);
+            }
+
+            if (notificationStatus.shouldVibrate()) {
+                builder.setVibrate(new long[] { 500, 1000 });
+            }
+
+            Intent intent = new Intent(context, MainActivity.class);
+            intent.putExtra(Keys.SHOW_FILTER, true);
+
+            if (size == 1) {
+                intent.putExtra(Keys.SHOW_OFFER, offer);
+            }
+
+            PendingIntent pIntent = PendingIntent.getActivity(
+                    context,
+                    0,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+            builder.setContentIntent(pIntent);
+
+            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.notify(1, builder.build());
+        }
+    }
+
+    public void buildDebugNotification(Offer offer) {
+        buildNotification(ImmutableList.of(offer));
     }
 }

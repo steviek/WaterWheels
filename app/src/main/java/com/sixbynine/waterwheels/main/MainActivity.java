@@ -1,5 +1,7 @@
 package com.sixbynine.waterwheels.main;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
@@ -19,6 +21,8 @@ import java.util.List;
 
 public final class MainActivity extends BaseActivity implements OnOfferClickListener {
 
+    private static boolean inForeground;
+
     private State state;
     private Offer displayOffer;
 
@@ -30,6 +34,8 @@ public final class MainActivity extends BaseActivity implements OnOfferClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancelAll();
 
         if (FacebookManager.getInstance().isLoggedIn()) {
             if (savedInstanceState == null) {
@@ -46,6 +52,8 @@ public final class MainActivity extends BaseActivity implements OnOfferClickList
             state = State.LIST;
         }
 
+        boolean showFilter = getIntent().getBooleanExtra(Keys.SHOW_FILTER, false);
+
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
         if (fragments == null) {
             Fragment fragment;
@@ -54,7 +62,7 @@ public final class MainActivity extends BaseActivity implements OnOfferClickList
                     fragment = new LoginFragment();
                     break;
                 case LIST:
-                    fragment = new ControlFragment();
+                    fragment = ControlFragment.newInstance(showFilter);
                     VersionUpdate.showDialogIfAppropriate(this);
                     break;
                 case DISPLAY:
@@ -63,7 +71,15 @@ public final class MainActivity extends BaseActivity implements OnOfferClickList
                 default:
                     throw new IllegalStateException("Unexpected state: " + state);
             }
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, fragment)
+                    .commit();
+
+            Offer showOffer = getIntent().getParcelableExtra(Keys.SHOW_OFFER);
+            if (showOffer != null) {
+                onOfferClick(showOffer);
+            }
         }
     }
 
@@ -83,12 +99,15 @@ public final class MainActivity extends BaseActivity implements OnOfferClickList
             state = State.DISPLAY;
             getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new ControlFragment()).commit();
         }
+
+        inForeground = true;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         AppEventsLogger.deactivateApp(this);
+        inForeground = false;
     }
 
     @Override
@@ -133,5 +152,13 @@ public final class MainActivity extends BaseActivity implements OnOfferClickList
                 .replace(R.id.content_frame, DisplayFragment.newInstance(displayOffer))
                 .addToBackStack("display")
                 .commit();
+    }
+
+    /**
+     * A bit of a hack to determine if we are currently in the foreground.  Should work since this is the only activity,
+     * but wouldn't really work otherwise.
+     */
+    public static boolean isInForeground() {
+        return inForeground;
     }
 }

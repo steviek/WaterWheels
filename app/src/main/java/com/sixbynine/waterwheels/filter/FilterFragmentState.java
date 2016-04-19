@@ -1,13 +1,14 @@
 package com.sixbynine.waterwheels.filter;
 
+import com.google.common.base.Predicate;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.sixbynine.waterwheels.model.Offer;
 import com.sixbynine.waterwheels.model.PlaceChoice;
 import com.sixbynine.waterwheels.util.Logger;
 import com.sixbynine.waterwheels.util.Prefs;
-
-import java.util.concurrent.TimeUnit;
 
 public final class FilterFragmentState implements Parcelable {
 
@@ -120,12 +121,10 @@ public final class FilterFragmentState implements Parcelable {
         }
     };
 
-    static FilterFragmentState getState() {
+    public static FilterFragmentState getState() {
         FilterFragmentState state = new FilterFragmentState();
-        long savedTime = Prefs.getLong("state:saved");
-        long tenMinutesAgo = System.currentTimeMillis() - TimeUnit.MILLISECONDS.convert(10, TimeUnit.MINUTES);
-        // save the last filter for 10 minutes
-        if (savedTime > tenMinutesAgo) {
+        long savedTime = Prefs.getLong("state:saved", -1);
+        if (savedTime > -1) {
             state.origin = PlaceChoice.fromPrefs("state:origin");
             state.destination = PlaceChoice.fromPrefs("state:destination");
             state.timeStart = Prefs.getLong("state:start");
@@ -152,5 +151,34 @@ public final class FilterFragmentState implements Parcelable {
                 ", timeStart=" + timeStart +
                 ", timeEnd=" + timeEnd +
                 '}';
+    }
+
+    /**
+     * Returns a filter for offers that accepts with invalid parameters.
+     */
+    public Predicate<Offer> getGenerousPredicate() {
+        return getPredicate(true);
+    }
+
+    /**
+     * Returns a filter for offers that rejects with invalid parameters.
+     */
+    public Predicate<Offer> getUngenerousPredicate() {
+        return getPredicate(true);
+    }
+
+    private Predicate<Offer> getPredicate(final boolean generous) {
+        return new Predicate<Offer>() {
+            @Override
+            public boolean apply(Offer offer) {
+                boolean match = generous;
+                if (origin != null && destination != null && !origin.equals(destination)) {
+                    match = origin.getPlaces().contains(offer.getOrigin())
+                            && destination.getPlaces().contains(offer.getDestination());
+                }
+                return match && offer.getTime() >= getTimeStart() - 1000 * 60
+                        && offer.getTime() <= getTimeEnd() + 1000 * 60;
+            }
+        };
     }
 }

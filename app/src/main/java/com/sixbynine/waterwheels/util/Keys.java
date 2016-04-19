@@ -16,4 +16,7 @@ public final class Keys {
     public static final String SELECTED_INDEX = "SELECTED_INDEX";
     public static final String UPDATE_LOG = "UPDATE_LOG";
     public static final String APP_VERSION = "APP_VERSION";
+    public static final String NOTIFICATION_STATUS = "NOTIFICATION_STATUS";
+    public static final String SHOW_FILTER = "SHOW_FILTER";
+    public static final String SHOW_OFFER = "SHOW_OFFER";
 }

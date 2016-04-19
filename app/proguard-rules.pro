@@ -58,3 +58,10 @@
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 
 ##---------------End: proguard configuration for Guava  ----------
+
+-keep public class com.crittercism.**
+-keepclassmembers public class com.crittercism.* {
+    *;
+}
+-dontwarn com.crittercism.**
+-dontwarn crittercism.android.**

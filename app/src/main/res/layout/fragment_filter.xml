@@ -69,7 +69,7 @@
             android:id="@+id/date_time_end_choice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Feb 9 @ 10PM"
+            android:text="Friday at 10:00"
             android:layout_below="@+id/date_time_start_choice"
             android:layout_toRightOf="@+id/time_hint" />
 
@@ -82,7 +82,7 @@
             android:padding="16dp"
             android:background="?attr/selectableItemBackground"
             android:layout_below="@+id/date_time_start_choice"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
 
             android:text="@string/clear"/>
 

@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">WaterWheels</string>
 
+    <string name="yes">Yes</string>
+    <string name="ok">OK</string>
+
     <string name="today_at_x">Today at %1$s</string>
     <string name="tomorrow_at_x">Tomorrow at %1$s</string>
     <string name="x_at_y">%1$s at %2$s</string>
@@ -36,6 +39,8 @@
     <string name="auto_refresh">Auto-Refresh</string>
     <string name="refresh_in_background">Refresh posts in the background</string>
     <string name="wifi_only">Wifi only</string>
+    <string name="any_network">Wifi or data</string>
+    <string name="not_now">Not now</string>
     <string name="account">Account</string>
     <string-array name="before_after">
         <item>Before</item>
@@ -45,8 +50,30 @@
     <string name="origin">Origin</string>
     <string name="destination">Destination</string>
 
+    <string name="notifications">Notifications</string>
+    <string name="notify_me_filter">Notify me when a new post matches my filter</string>
+    <string name="vibrate">Vibrate</string>
+    <string name="sound">Sound</string>
+    <string name="light">Light</string>
+
+    <string name="must_enable_refresh_title">Auto-refresh is not enabled</string>
+    <string name="must_enable_refresh">
+        In order to show notifications, auto-refresh must be enabled.\n\n
+        Enable auto-refresh now?
+    </string>
+
+    <string name="new_ride">New ride</string>
+    <string name="x_new_rides">%1$d new rides</string>
+    <string name="offer_format">%1$s &#8594; %2$s, departs at %3$s</string>
+    <string name="offer_format_multiple">%1$s &#8702; %2$s, departs at %3$s&#8230;</string>
+
     <string name="new_version">New Features In This Version</string>
     <string name="new_features_version_3">
         &#8226; Tab layout\n&#8226; Auto-refresh (enable in settings)\n&#8226; Bug fixes
     </string>
+    <string name="new_features_version_6">
+        &#8226; Filters persisted\n&#8226; Fewer duplicate offers\n&#8226; Get notified of new rides that match your filter\n\n
+        Would you like to turn notifications on?
+    </string>
+
 </resources>

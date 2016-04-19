@@ -21,6 +21,7 @@ import com.sixbynine.waterwheels.util.Prefs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public final class OfferDbManager {
 
@@ -70,23 +71,30 @@ public final class OfferDbManager {
         }.execute();
     }
 
-    public void storeOffers(List<Offer> offers) {
+    public StoreResult storeOffers(List<Offer> offers) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
+        boolean allSucceeded = true;
+        ImmutableList.Builder<Offer> newOffers = ImmutableList.builder();
+
         for (Offer offer : offers) {
-            Cursor c = db.rawQuery("SELECT " + OfferContract.Offer._ID +
+            long oneHour = TimeUnit.MILLISECONDS.convert(1, TimeUnit.HOURS);
+            String query = "SELECT " + OfferContract.Offer._ID +
                     " FROM " + OfferContract.Offer.TABLE_NAME +
-                    " WHERE (" + OfferContract.Offer.COLUMN_NAME_POST_ID + " = ?) OR (" +
-                    OfferContract.Offer.COLUMN_NAME_DESTINATION + " = ? AND " +
-                    OfferContract.Offer.COLUMN_NAME_ORIGIN + " = ? AND " +
+                    " WHERE (" + OfferContract.Offer.COLUMN_NAME_POST_ID + " = ?) OR ((" +
+                    OfferContract.Offer.COLUMN_NAME_DESTINATION + " = ? OR " +
+                    OfferContract.Offer.COLUMN_NAME_ORIGIN + " = ?) AND " +
                     OfferContract.Offer.COLUMN_NAME_POST_FROM_ID + " = ? AND " +
-                    OfferContract.Offer.COLUMN_NAME_TIME + " = ?)",
+                    OfferContract.Offer.COLUMN_NAME_TIME + " >= ? AND " +
+                    OfferContract.Offer.COLUMN_NAME_TIME + " <= ?)";
+            Cursor c = db.rawQuery(query,
                     new String[]{
                             offer.getPost().getId(),
                             offer.getDestination().name(),
                             offer.getOrigin().name(),
                             offer.getPost().getFrom().getId(),
-                            String.valueOf(offer.getTime())});
+                            String.valueOf(offer.getTime() - oneHour),
+                            String.valueOf(offer.getTime() + oneHour)});
 
             // delete older posts that match, in case they've posted a new one with updated info
             c.moveToFirst();
@@ -96,7 +104,9 @@ public final class OfferDbManager {
                 c.moveToNext();
             }
 
-            if (c.getCount() > 0) {
+            if (c.getCount() == 0) {
+                newOffers.add(offer);
+            } else {
                 Logger.d("Deleted %d older post(s) for the same ride", c.getCount());
             }
             c.close();
@@ -114,9 +124,11 @@ public final class OfferDbManager {
             cv.put(OfferContract.Offer.COLUMN_NAME_POST_FROM_NAME, offer.getPost().getFrom().getName());
             long rowId = db.insert(OfferContract.Offer.TABLE_NAME, null, cv);
             if (rowId == -1) {
+                allSucceeded = false;
                 Logger.e("Error inserting for " + offer);
             }
         }
+        return new StoreResult(allSucceeded, offers, newOffers.build());
     }
 
     public List<Offer> getOffers() {
@@ -190,5 +202,29 @@ public final class OfferDbManager {
 
     public State getState() {
         return state;
+    }
+
+    public static final class StoreResult {
+        private final boolean success;
+        private final List<Offer> offersSaved;
+        private final List<Offer> newOffers;
+
+        public StoreResult(boolean success, List<Offer> offersSaved, List<Offer> newOffers) {
+            this.success = success;
+            this.offersSaved = offersSaved;
+            this.newOffers = newOffers;
+        }
+
+        public boolean isSuccess() {
+            return success;
+        }
+
+        public List<Offer> getOffersSaved() {
+            return offersSaved;
+        }
+
+        public List<Offer> getNewOffers() {
+            return newOffers;
+        }
     }
 }

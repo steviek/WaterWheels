@@ -1,5 +1,6 @@
 package com.sixbynine.waterwheels.main;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.sixbynine.waterwheels.BaseFragment;
 import com.sixbynine.waterwheels.R;
 import com.sixbynine.waterwheels.filter.FilterFragment;
+import com.sixbynine.waterwheels.offerdisplay.OnOfferClickListener;
 import com.sixbynine.waterwheels.settings.SettingsFragment;
 import com.sixbynine.waterwheels.util.Keys;
 
@@ -21,6 +23,21 @@ public final class ControlFragment extends BaseFragment {
 
     private ViewPager mPager;
     private PagerSlidingTabStrip mTabs;
+    private OnOfferClickListener mOnOfferClickListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mOnOfferClickListener = OnOfferClickListener.class.cast(context);
+    }
+
+    public static ControlFragment newInstance(boolean showFilter) {
+        ControlFragment fragment = new ControlFragment();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(Keys.SHOW_FILTER, showFilter);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -34,7 +51,11 @@ public final class ControlFragment extends BaseFragment {
 
         mTabs.setViewPager(mPager);
 
-        if (savedInstanceState == null) {
+        Bundle args = getArguments();
+
+        if (args != null && args.getBoolean(Keys.SHOW_FILTER)) {
+            mPager.setCurrentItem(0);
+        } else if (savedInstanceState == null) {
             mPager.setCurrentItem(1);
         } else {
             mPager.setCurrentItem(savedInstanceState.getInt(Keys.SELECTED_INDEX));

@@ -1,6 +1,5 @@
 package com.sixbynine.waterwheels.filter;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
@@ -182,23 +181,10 @@ public final class FilterFragment extends BaseFragment {
                 mTimeStartChoice.setText(OfferUtils.makePrettyTimestamp(getContext(), mState.getTimeStart()) + " - ");
                 mTimeEndChoice.setText(OfferUtils.makePrettyTimestamp(getContext(), mState.getTimeEnd()));
 
-                final PlaceChoice origin = mState.getOrigin();
-                final PlaceChoice destination = mState.getDestination();
-                Predicate<Offer> filter = new Predicate<Offer>() {
-                    @Override
-                    public boolean apply(@Nullable Offer offer) {
-                        boolean match = true;
-                        if (origin != null && destination != null && !origin.equals(destination)) {
-                            match = origin.getPlaces().contains(offer.getOrigin())
-                                    && destination.getPlaces().contains(offer.getDestination());
-                        }
-                        return match && offer.getTime() >= mState.getTimeStart() - 1000 * 60
-                                && offer.getTime() <= mState.getTimeEnd() + 1000 * 60;
-                    }
-                };
-
                 if (mListView.getAdapter() == null || mShouldChangeFilter) {
-                    Iterable<Offer> offers = Iterables.filter(OfferDbManager.getInstance().getOffers(), filter);
+                    Iterable<Offer> offers = Iterables.filter(
+                            OfferDbManager.getInstance().getOffers(),
+                            mState.getGenerousPredicate());
                     mListView.setAdapter(new FeedAdapter(getContext(), ImmutableList.copyOf(offers)));
                     mShouldChangeFilter = false;
                 }

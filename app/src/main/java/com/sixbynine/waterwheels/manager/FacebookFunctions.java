@@ -12,14 +12,11 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 public final class FacebookFunctions {
 
     private FacebookFunctions() {}
 
     public static final Function<JSONObject, Profile> JSON_OBJECT_PROFILE = new Function<JSONObject, Profile>() {
-        @Nullable
         @Override
         public Profile apply(JSONObject object) {
             try {

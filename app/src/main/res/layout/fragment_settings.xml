@@ -16,23 +16,42 @@
             android:layout_height="wrap_content"
             android:text="@string/auto_refresh" />
 
-        <com.sixbynine.waterwheels.view.CheckableTextView
+        <Switch
             android:id="@+id/refresh_posts"
-            style="@style/Settings.CheckableTextView"
-            android:text="@string/refresh_in_background"
-            android:background="?attr/selectableItemBackground"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            style="@style/Settings.Switch"
+            android:text="@string/refresh_in_background" />
 
-        <com.sixbynine.waterwheels.view.CheckableTextView
+        <Switch
             android:id="@+id/wifi_only"
-            style="@style/Settings.CheckableTextViewInner"
-            android:text="@string/wifi_only"
-            android:layout_marginTop="-8dp"
-            android:layout_width="match_parent"
+            style="@style/Settings.Switch.Inset"
+            android:text="@string/wifi_only" />
+
+        <TextView
+            style="@style/Settings.Header"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:checked="true"/>
+            android:layout_marginTop="8dp"
+            android:text="@string/notifications" />
+
+        <Switch
+            android:id="@+id/notify_me_filter"
+            style="@style/Settings.Switch"
+            android:text="@string/notify_me_filter"/>
+
+        <Switch
+            android:id="@+id/light"
+            style="@style/Settings.Switch.Inset"
+            android:text="@string/light"/>
+
+        <Switch
+            android:id="@+id/sound"
+            style="@style/Settings.Switch.Inset"
+            android:text="@string/sound"/>
+
+        <Switch
+            android:id="@+id/vibrate"
+            style="@style/Settings.Switch.Inset"
+            android:text="@string/vibrate"/>
 
         <TextView
             android:id="@+id/debug_text"

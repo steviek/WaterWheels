@@ -6,11 +6,15 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.v7.app.AlertDialog;
 
+import com.sixbynine.waterwheels.events.SettingsChangedEvent;
+import com.sixbynine.waterwheels.settings.NotificationChecker;
+import com.sixbynine.waterwheels.settings.NotificationStatus;
 import com.sixbynine.waterwheels.util.Keys;
 import com.sixbynine.waterwheels.util.Prefs;
 
 public enum VersionUpdate {
-    THREE(3, R.string.new_features_version_3);
+    THREE(3, R.string.new_features_version_3),
+    SIX(6, R.string.new_features_version_6);
 
     private final int version;
     private final int text;
@@ -24,8 +28,7 @@ public enum VersionUpdate {
         return version;
     }
 
-    public static void showDialogIfAppropriate(Activity activity) {
-        int oldVersion = Prefs.getInt(Keys.APP_VERSION, 2);
+    public static void showDialogIfAppropriate(final Activity activity) {
         int versionCode;
 
         try {
@@ -34,6 +37,8 @@ public enum VersionUpdate {
         } catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException(e);
         }
+
+        int oldVersion = Prefs.getInt(Keys.APP_VERSION, versionCode);
 
         if (oldVersion < versionCode) {
             int maxVersion = 0;
@@ -49,12 +54,38 @@ public enum VersionUpdate {
                 AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
                 alertDialog.setTitle(R.string.new_version);
                 alertDialog.setMessage(activity.getString(maxVersionText));
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
+
+                if (maxVersion == 6) {
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, activity.getString(R.string.yes),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    NotificationStatus.enable();
+                                    MyApplication.getInstance().getBus().post(new SettingsChangedEvent());
+                                    NotificationChecker.checkThatNotificationCanBeSet(activity,
+                                            new NotificationChecker.OnFinishedListener() {
+                                                @Override
+                                                public void onFinished() {
+                                                    MyApplication.getInstance().getBus().post(new SettingsChangedEvent());
+                                                }
+                                            });
+                                }
+                            });
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, activity.getString(R.string.not_now),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                } else {
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, activity.getString(R.string.ok),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                }
+
                 alertDialog.show();
             }
         }
