@@ -37,10 +37,14 @@ public final class FeedManager {
     private FeedManager() {}
 
     public static List<Offer> extractOffers(List<Post> feed) {
+        return extractOffers(feed, 0);
+    }
+
+    public static List<Offer> extractOffers(List<Post> feed, long since) {
         List<Offer> list = new ArrayList<>();
         for (Post post : feed) {
             String message = post.getMessage();
-            if (message != null) {
+            if (message != null && post.getUpdatedTime() > since) {
                 boolean driving = (DRIVING_PATTERN.matcher(message).matches()
                         || PICKUP_PATTERN.matcher(message).find()
                         || DIRECTION_AT_START_PATTERN.matcher(message).matches())

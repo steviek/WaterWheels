@@ -53,6 +53,7 @@ public final class FacebookManager implements FacebookCallback<LoginResult> {
 
     private static FacebookManager instance;
     private static final String CARPOOL_GROUP_ID = "372772186164295";
+    private static final boolean SINCE_BROKEN = true;
 
     private boolean makingGroupRequest;
     private Status status = Status.INITIALIZED;
@@ -127,7 +128,7 @@ public final class FacebookManager implements FacebookCallback<LoginResult> {
 
         final long queryTime = System.currentTimeMillis();
         long lastWeek = queryTime - TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS);
-        long lastUpdateTime = Math.max(Prefs.getLong(Keys.LAST_UPDATED), lastWeek);
+        final long lastUpdateTime = Math.max(Prefs.getLong(Keys.LAST_UPDATED), lastWeek);
 
         Logger.d("Last update time: " + lastUpdateTime);
 
@@ -154,7 +155,7 @@ public final class FacebookManager implements FacebookCallback<LoginResult> {
                                     } else {
                                         Prefs.putBoolean(Keys.HAS_SUCCESSFUL_REQUESTS, true);
                                     }
-                                    List<Offer> offers = FeedManager.extractOffers(feed);
+                                    List<Offer> offers = FeedManager.extractOffers(feed, TimeUnit.SECONDS.convert(lastUpdateTime, TimeUnit.MILLISECONDS));
 
                                     Logger.d("Posts contained %d offers", offers.size());
                                     StoreResult result = OfferDbManager.getInstance().storeOffers(offers);
@@ -191,9 +192,13 @@ public final class FacebookManager implements FacebookCallback<LoginResult> {
 
                 Bundle parameters = new Bundle();
                 parameters.putString("date_format", "U");
-                parameters.putString("fields", "created_time,from,id,message");
+                parameters.putString("fields", "created_time,from,id,message,updated_time");
                 parameters.putString("limit", "2000");
-                parameters.putString("since", String.valueOf(TimeUnit.SECONDS.convert(lastUpdateTime, TimeUnit.MILLISECONDS)));
+
+                if (!SINCE_BROKEN) {
+                    parameters.putString("since", String.valueOf(TimeUnit.SECONDS.convert(lastUpdateTime, TimeUnit.MILLISECONDS)));
+                }
+
                 request.setParameters(parameters);
                 request.executeAsync();
             }

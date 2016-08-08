@@ -118,6 +118,7 @@ public final class OfferDbManager {
             cv.put(OfferContract.Offer.COLUMN_NAME_PRICE, offer.getPrice().or(-1));
             cv.put(OfferContract.Offer.COLUMN_NAME_TIME, offer.getTime());
             cv.put(OfferContract.Offer.COLUMN_NAME_POST_CREATED_TIME, offer.getPost().getCreatedTime());
+            cv.put(OfferContract.Offer.COLUMN_NAME_POST_UPDATED_TIME, offer.getPost().getUpdatedTime());
             cv.put(OfferContract.Offer.COLUMN_NAME_POST_ID, offer.getPost().getId());
             cv.put(OfferContract.Offer.COLUMN_NAME_POST_MESSAGE, offer.getPost().getMessage());
             cv.put(OfferContract.Offer.COLUMN_NAME_POST_FROM_ID, offer.getPost().getFrom().getId());
@@ -146,6 +147,7 @@ public final class OfferDbManager {
         int indexPrice = c.getColumnIndexOrThrow(OfferContract.Offer.COLUMN_NAME_PRICE);
         int indexTime = c.getColumnIndexOrThrow(OfferContract.Offer.COLUMN_NAME_TIME);
         int indexPostCreatedTime = c.getColumnIndexOrThrow(OfferContract.Offer.COLUMN_NAME_POST_CREATED_TIME);
+        int indexPostUpdatedTime = c.getColumnIndexOrThrow(OfferContract.Offer.COLUMN_NAME_POST_UPDATED_TIME);
         int indexPostId = c.getColumnIndexOrThrow(OfferContract.Offer.COLUMN_NAME_POST_ID);
         int indexPostMessage = c.getColumnIndexOrThrow(OfferContract.Offer.COLUMN_NAME_POST_MESSAGE);
         int indexPostFromId = c.getColumnIndexOrThrow(OfferContract.Offer.COLUMN_NAME_POST_FROM_ID);
@@ -160,13 +162,14 @@ public final class OfferDbManager {
             Optional<Integer> price = rawPrice == -1 ? Optional.<Integer>absent() : Optional.of(rawPrice);
             long time = c.getLong(indexTime);
             long postCreatedTime = c.getLong(indexPostCreatedTime);
+            long postUpdatedTime = c.getLong(indexPostUpdatedTime);
             String postId = c.getString(indexPostId);
             String postMessage = c.getString(indexPostMessage);
             String postFromId = c.getString(indexPostFromId);
             String postFromName = c.getString(indexPostFromName);
 
             Profile from = new Profile(postFromName, postFromId);
-            Post post = new Post(postId, postMessage, postCreatedTime, from);
+            Post post = new Post(postId, postMessage, postCreatedTime, postUpdatedTime, from);
             Offer offer = new Offer(post, price, origin, destination, phone, time);
             list.add(offer);
             c.moveToNext();

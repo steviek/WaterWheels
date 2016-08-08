@@ -41,11 +41,13 @@ public final class FacebookFunctions {
                 }
 
                 long createdTime = object.getLong("created_time");
+                long updatedTime = object.getLong("updated_time");
                 Profile from = JSON_OBJECT_PROFILE.apply(object.getJSONObject("from"));
                 return new Post(
                         id,
                         message,
                         createdTime,
+                        updatedTime,
                         from);
             } catch (JSONException e) {
                 throw new RuntimeException(e);

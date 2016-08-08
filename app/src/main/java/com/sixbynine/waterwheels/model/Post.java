@@ -8,12 +8,14 @@ public final class Post implements Parcelable {
     private final String id;
     private final String message;
     private final long createdTime;
+    private final long updatedTime;
     private final Profile from;
 
-    public Post(String id, String message, long createdTime, Profile from) {
+    public Post(String id, String message, long createdTime, long updatedTime, Profile from) {
         this.id = id;
         this.message = message;
         this.createdTime = createdTime;
+        this.updatedTime = updatedTime;
         this.from = from;
     }
 
@@ -27,6 +29,10 @@ public final class Post implements Parcelable {
 
     public long getCreatedTime() {
         return createdTime;
+    }
+
+    public long getUpdatedTime() {
+        return updatedTime;
     }
 
     public Profile getFrom() {
@@ -43,6 +49,7 @@ public final class Post implements Parcelable {
         dest.writeString(id);
         dest.writeString(message);
         dest.writeLong(createdTime);
+        dest.writeLong(updatedTime);
         dest.writeParcelable(from, flags);
     }
 
@@ -52,8 +59,9 @@ public final class Post implements Parcelable {
             String id = source.readString();
             String message = source.readString();
             long createdTime = source.readLong();
+            long updatedTime = source.readLong();
             Profile from = source.readParcelable(Profile.class.getClassLoader());
-            return new Post(id, message, createdTime, from);
+            return new Post(id, message, createdTime, updatedTime, from);
         }
 
         @Override
