@@ -1,9 +1,5 @@
 package com.sixbynine.waterwheels.manager;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -23,6 +19,9 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.login.LoginResult;
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.sixbynine.waterwheels.BuildConfig;
 import com.sixbynine.waterwheels.MyApplication;
 import com.sixbynine.waterwheels.R;
@@ -57,7 +56,6 @@ public final class FacebookManager implements FacebookCallback<LoginResult> {
 
     private boolean makingGroupRequest;
     private Status status = Status.INITIALIZED;
-    private boolean waitingForDb;
 
     private FacebookManager() {
         MyApplication.getInstance().getBus().register(this);
@@ -142,7 +140,6 @@ public final class FacebookManager implements FacebookCallback<LoginResult> {
                     @Override
                     public void onCompleted(GraphResponse graphResponse) {
                         if (graphResponse.getError() == null) {
-                            Logger.d(graphResponse.getJSONObject().toString());
                             new AsyncTask<JSONObject, Void, Void>() {
                                 @Override
                                 protected Void doInBackground(JSONObject... params) {

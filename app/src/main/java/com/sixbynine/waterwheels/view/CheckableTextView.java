@@ -16,6 +16,7 @@ import com.sixbynine.waterwheels.R;
 /**
  * Created by stevenkideckel on 14-12-31.
  */
+@SuppressWarnings("ResourceType")
 public class CheckableTextView extends RelativeLayout implements Checkable, View.OnClickListener {
     HeaderSubheaderView mHeaderSubheaderView;
     TextView mOneLineTextView;

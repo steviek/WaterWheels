@@ -44,7 +44,7 @@ public final class FeedManager {
         List<Offer> list = new ArrayList<>();
         for (Post post : feed) {
             String message = post.getMessage();
-            if (message != null && post.getUpdatedTime() > since) {
+            if (message != null && post.getCreatedTime() > since) {
                 boolean driving = (DRIVING_PATTERN.matcher(message).matches()
                         || PICKUP_PATTERN.matcher(message).find()
                         || DIRECTION_AT_START_PATTERN.matcher(message).matches())
