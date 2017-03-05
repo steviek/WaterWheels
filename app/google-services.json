@@ -1,21 +1,41 @@
 {
   "project_info": {
-    "project_id": "waterwheels-875f3",
     "project_number": "132165763851",
-    "name": "WaterWheels"
+    "firebase_url": "https://waterwheels-875f3.firebaseio.com",
+    "project_id": "waterwheels-875f3",
+    "storage_bucket": "waterwheels-875f3.appspot.com"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:132165763851:android:e18d4a053a123162",
-        "client_id": "android:com.sixbynine.waterwheels",
-        "client_type": 1,
         "android_client_info": {
           "package_name": "com.sixbynine.waterwheels"
         }
       },
-      "oauth_client": [],
-      "api_key": [],
+      "oauth_client": [
+        {
+          "client_id": "132165763851-a8kcuc04k0itka8alf783igu5ugkpaof.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sixbynine.waterwheels",
+            "certificate_hash": "5ee4e9eb7a189a340191677949210d77cefb9d48"
+          }
+        },
+        {
+          "client_id": "132165763851-nols5pic5bi24jfh5710tvc0jmdqpc11.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "132165763851-f319onts10ev2bv0hccdpvjmj4ml4lhj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxpGHisCE-4HoJg0IAT_xh0q_uY9OP4KY"
+        }
+      ],
       "services": {
         "analytics_service": {
           "status": 2,
@@ -23,23 +43,15 @@
             "tracking_id": "UA-66841473-4"
           }
         },
-        "cloud_messaging_service": {
-          "status": 1,
-          "apns_config": []
-        },
         "appinvite_service": {
           "status": 1,
           "other_platform_oauth_client": []
         },
-        "google_signin_service": {
-          "status": 1
-        },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }
   ],
-  "client_info": [],
-  "ARTIFACT_VERSION": "1"
+  "configuration_version": "1"
 }

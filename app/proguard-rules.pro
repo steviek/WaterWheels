@@ -65,3 +65,4 @@
 }
 -dontwarn com.crittercism.**
 -dontwarn crittercism.android.**
+-dontwarn com.google.common.**

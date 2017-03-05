@@ -52,7 +52,7 @@ public final class FacebookManager implements FacebookCallback<LoginResult> {
 
     private static FacebookManager instance;
     private static final String CARPOOL_GROUP_ID = "372772186164295";
-    private static final boolean SINCE_BROKEN = true;
+    private static final boolean SINCE_BROKEN = false;
 
     private boolean makingGroupRequest;
     private Status status = Status.INITIALIZED;
@@ -190,7 +190,7 @@ public final class FacebookManager implements FacebookCallback<LoginResult> {
                 Bundle parameters = new Bundle();
                 parameters.putString("date_format", "U");
                 parameters.putString("fields", "created_time,from,id,message,updated_time");
-                parameters.putString("limit", "2000");
+                parameters.putString("limit", "750");
 
                 if (!SINCE_BROKEN) {
                     parameters.putString("since", String.valueOf(TimeUnit.SECONDS.convert(lastUpdateTime, TimeUnit.MILLISECONDS)));
