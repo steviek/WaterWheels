@@ -1,13 +1,12 @@
 package com.sixbynine.waterwheels.data;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import com.sixbynine.waterwheels.MyApplication;
 import com.sixbynine.waterwheels.events.DatabaseUpgradedEvent;
 import com.sixbynine.waterwheels.manager.FeedManager;
@@ -63,12 +62,27 @@ public final class OfferDbManager {
             @Override
             protected Void doInBackground(Void... params) {
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
-                int rowsDeleted = db.delete(OfferContract.Offer.TABLE_NAME, OfferContract.Offer.COLUMN_NAME_TIME + " < ?",
+                int rowsDeleted = db.delete(
+                        OfferContract.Offer.TABLE_NAME,
+                        OfferContract.Offer.COLUMN_NAME_TIME + " < ? AND " +
+                        OfferContract.Offer.COLUMN_NAME_PINNED + " = 0",
                         new String[] {String.valueOf(System.currentTimeMillis())});
                 Logger.d("Deleted %d stale rows", rowsDeleted);
                 return null;
             }
         }.execute();
+    }
+
+    public void updatePinned(Offer offer) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(OfferContract.Offer.COLUMN_NAME_PINNED, offer.isPinned() ? 1 : 0);
+        db.update(
+                OfferContract.Offer.TABLE_NAME,
+                contentValues,
+                OfferContract.Offer.COLUMN_NAME_POST_ID + " = ?",
+                new String[] {offer.getPost().getId()});
     }
 
     public StoreResult storeOffers(List<Offer> offers) {
@@ -123,6 +137,7 @@ public final class OfferDbManager {
             cv.put(OfferContract.Offer.COLUMN_NAME_POST_MESSAGE, offer.getPost().getMessage());
             cv.put(OfferContract.Offer.COLUMN_NAME_POST_FROM_ID, offer.getPost().getFrom().getId());
             cv.put(OfferContract.Offer.COLUMN_NAME_POST_FROM_NAME, offer.getPost().getFrom().getName());
+            cv.put(OfferContract.Offer.COLUMN_NAME_PINNED, offer.isPinned() ? 1 : 0);
             long rowId = db.insert(OfferContract.Offer.TABLE_NAME, null, cv);
             if (rowId == -1) {
                 allSucceeded = false;
@@ -137,6 +152,7 @@ public final class OfferDbManager {
 
         Cursor c = db.rawQuery("SELECT * FROM " + OfferContract.Offer.TABLE_NAME +
                 " WHERE " + OfferContract.Offer.COLUMN_NAME_TIME + " > " + System.currentTimeMillis() +
+                " OR " + OfferContract.Offer.COLUMN_NAME_PINNED + " = 1" +
                 " ORDER BY " + OfferContract.Offer.COLUMN_NAME_TIME + " ASC", null);
 
         ImmutableList.Builder<Offer> list = ImmutableList.builder();
@@ -152,6 +168,7 @@ public final class OfferDbManager {
         int indexPostMessage = c.getColumnIndexOrThrow(OfferContract.Offer.COLUMN_NAME_POST_MESSAGE);
         int indexPostFromId = c.getColumnIndexOrThrow(OfferContract.Offer.COLUMN_NAME_POST_FROM_ID);
         int indexPostFromName = c.getColumnIndexOrThrow(OfferContract.Offer.COLUMN_NAME_POST_FROM_NAME);
+        int indexPinned = c.getColumnIndexOrThrow(OfferContract.Offer.COLUMN_NAME_PINNED);
 
         c.moveToFirst();
         while (!c.isAfterLast()) {
@@ -170,7 +187,10 @@ public final class OfferDbManager {
 
             Profile from = new Profile(postFromName, postFromId);
             Post post = new Post(postId, postMessage, postCreatedTime, postUpdatedTime, from);
-            Offer offer = new Offer(post, price, origin, destination, phone, time);
+
+            boolean pinned = c.getInt(indexPinned) == 1;
+
+            Offer offer = new Offer(post, price, origin, destination, phone, time, pinned);
             list.add(offer);
             c.moveToNext();
         }

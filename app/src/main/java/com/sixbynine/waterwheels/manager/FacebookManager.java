@@ -190,7 +190,7 @@ public final class FacebookManager implements FacebookCallback<LoginResult> {
                 Bundle parameters = new Bundle();
                 parameters.putString("date_format", "U");
                 parameters.putString("fields", "created_time,from,id,message,updated_time");
-                parameters.putString("limit", "2000");
+                parameters.putString("limit", "1000");
 
                 if (!SINCE_BROKEN) {
                     parameters.putString("since", String.valueOf(TimeUnit.SECONDS.convert(lastUpdateTime, TimeUnit.MILLISECONDS)));

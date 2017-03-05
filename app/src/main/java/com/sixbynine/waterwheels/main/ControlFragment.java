@@ -1,6 +1,5 @@
 package com.sixbynine.waterwheels.main;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,7 +14,6 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.sixbynine.waterwheels.BaseFragment;
 import com.sixbynine.waterwheels.R;
 import com.sixbynine.waterwheels.filter.FilterFragment;
-import com.sixbynine.waterwheels.offerdisplay.OnOfferClickListener;
 import com.sixbynine.waterwheels.settings.SettingsFragment;
 import com.sixbynine.waterwheels.util.Keys;
 
@@ -23,13 +21,6 @@ public final class ControlFragment extends BaseFragment {
 
     private ViewPager mPager;
     private PagerSlidingTabStrip mTabs;
-    private OnOfferClickListener mOnOfferClickListener;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mOnOfferClickListener = OnOfferClickListener.class.cast(context);
-    }
 
     public static ControlFragment newInstance(boolean showFilter) {
         ControlFragment fragment = new ControlFragment();
@@ -88,8 +79,7 @@ public final class ControlFragment extends BaseFragment {
             if (fragments[position] == null) {
                 switch (position) {
                     case 0:
-                        fragments[0] = new FilterFragment()
-                        ;
+                        fragments[0] = new FilterFragment();
                     case 1:
                         fragments[1] = new MainFragment();
                     case 2:

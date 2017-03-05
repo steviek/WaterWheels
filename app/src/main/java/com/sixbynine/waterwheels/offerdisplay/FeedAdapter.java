@@ -11,9 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sixbynine.waterwheels.R;
+import com.sixbynine.waterwheels.events.OfferPinnedChangedEvent;
 import com.sixbynine.waterwheels.manager.FacebookManager;
 import com.sixbynine.waterwheels.model.Offer;
 import com.sixbynine.waterwheels.util.OfferUtils;
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -97,5 +99,10 @@ public final class FeedAdapter extends ArrayAdapter<Offer> {
             this.price = (TextView) v.findViewById(R.id.price);
             this.profile = (ImageView) v.findViewById(R.id.profile_image);
         }
+    }
+
+    @Subscribe
+    public void onOfferPinnedChanged(OfferPinnedChangedEvent event) {
+        notifyDataSetChanged();
     }
 }

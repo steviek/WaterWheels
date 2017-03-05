@@ -1,9 +1,12 @@
 package com.sixbynine.waterwheels.model;
 
-import com.google.common.base.Optional;
-
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.google.common.base.Optional;
+import com.sixbynine.waterwheels.MyApplication;
+import com.sixbynine.waterwheels.data.OfferDbManager;
+import com.sixbynine.waterwheels.events.OfferPinnedChangedEvent;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -14,6 +17,7 @@ public final class Offer implements Parcelable {
     private final Optional<String> phoneNumber;
     private final long time;
     private final Post post;
+    private final boolean pinned;
 
     public Offer(
             Post post,
@@ -21,7 +25,8 @@ public final class Offer implements Parcelable {
             Place origin,
             Place destination,
             Optional<String> phoneNumber,
-            long time) {
+            long time,
+            boolean pinned) {
 
         this.post = post;
         this.price = checkNotNull(price);
@@ -29,6 +34,7 @@ public final class Offer implements Parcelable {
         this.destination = checkNotNull(destination);
         this.phoneNumber = checkNotNull(phoneNumber);
         this.time = time;
+        this.pinned = pinned;
     }
 
     public Post getPost() {
@@ -55,6 +61,23 @@ public final class Offer implements Parcelable {
         return time;
     }
 
+    public boolean isPinned() {
+        return pinned;
+    }
+
+    /**
+     * Pins the post so that it does not get deleted, or unpins it.
+     * @return a copy of the offer, now with pinned toggled
+     */
+    public Offer togglePinned() {
+        Offer copy = new Offer(post, price, origin, destination, phoneNumber, time, !pinned);
+
+        OfferDbManager.getInstance().updatePinned(copy);
+        MyApplication.getInstance().getBus().post(new OfferPinnedChangedEvent(copy));
+
+        return copy;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -68,6 +91,7 @@ public final class Offer implements Parcelable {
         dest.writeString(phoneNumber.or("null"));
         dest.writeLong(time);
         dest.writeParcelable(post, flags);
+        dest.writeInt(pinned ? 1 : 0);
     }
 
     public static final Creator<Offer> CREATOR = new Creator<Offer>() {
@@ -81,7 +105,8 @@ public final class Offer implements Parcelable {
             Optional<String> phone = phoneNumber.equals("null") ? Optional.<String>absent() : Optional.of(phoneNumber);
             long time = source.readLong();
             Post post = source.readParcelable(Post.class.getClassLoader());
-            return new Offer(post, price, origin, destination, phone, time);
+            boolean pinned = source.readInt() == 1;
+            return new Offer(post, price, origin, destination, phone, time, pinned);
         }
 
         @Override
@@ -99,6 +124,7 @@ public final class Offer implements Parcelable {
                 ", phoneNumber=" + phoneNumber +
                 ", time=" + time +
                 ", post=" + post +
+                ", pinned=" + pinned +
                 '}';
     }
 }

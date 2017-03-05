@@ -60,7 +60,8 @@ public final class FeedManager {
                                     travelPoints.getOrigin(),
                                     travelPoints.getDestination(),
                                     getPhoneNumber(message),
-                                    time));
+                                    time,
+                                    false));
                         }
                     }
                 }

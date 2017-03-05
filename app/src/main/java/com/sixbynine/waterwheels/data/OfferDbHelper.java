@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 public final class OfferDbHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "offer.db";
 
     public OfferDbHelper(Context context) {
@@ -34,20 +34,24 @@ public final class OfferDbHelper extends SQLiteOpenHelper {
                 Offer.COLUMN_NAME_POST_ID + " TEXT," +
                 Offer.COLUMN_NAME_POST_MESSAGE + " TEXT," +
                 Offer.COLUMN_NAME_POST_FROM_ID + " TEXT," +
-                Offer.COLUMN_NAME_POST_FROM_NAME + " TEXT )");
-
+                Offer.COLUMN_NAME_POST_FROM_NAME + " TEXT," +
+                Offer.COLUMN_NAME_PINNED + " INTEGER DEFAULT 0)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + Offer.TABLE_NAME);
+        if (newVersion == 3 && oldVersion == 2) {
+            db.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s INTEGER DEFAULT 0",
+                    Offer.TABLE_NAME, Offer.COLUMN_NAME_PINNED));
+        } else {
+            db.execSQL("DROP TABLE IF EXISTS " + Offer.TABLE_NAME);
 
-        final long queryTime = System.currentTimeMillis();
-        long lastWeek = queryTime - TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS);
-        Prefs.putLong(Keys.LAST_UPDATED, lastWeek);
+            final long queryTime = System.currentTimeMillis();
+            long lastWeek = queryTime - TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS);
+            Prefs.putLong(Keys.LAST_UPDATED, lastWeek);
 
-        onCreate(db);
+            onCreate(db);
+        }
     }
-
 
 }

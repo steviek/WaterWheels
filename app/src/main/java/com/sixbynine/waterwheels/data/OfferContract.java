@@ -19,6 +19,7 @@ public final class OfferContract {
         public static final String COLUMN_NAME_POST_UPDATED_TIME = "post_updated_time";
         public static final String COLUMN_NAME_POST_FROM_ID = "post_from_id";
         public static final String COLUMN_NAME_POST_FROM_NAME = "post_from_name";
+        public static final String COLUMN_NAME_PINNED = "pinned";
     }
 
 }

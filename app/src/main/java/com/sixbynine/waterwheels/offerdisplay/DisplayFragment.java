@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -111,6 +112,20 @@ public final class DisplayFragment extends BaseFragment {
 
         TextView message = (TextView) view.findViewById(R.id.message);
         message.setText(mOffer.getPost().getMessage());
+
+        final ImageButton star = (ImageButton) view.findViewById(R.id.star);
+        star.setImageResource(mOffer.isPinned()
+                ? R.drawable.ic_action_toggle_star
+                : R.drawable.ic_action_toggle_star_outline);
+        star.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOffer = mOffer.togglePinned();
+                star.setImageResource(mOffer.isPinned()
+                        ? R.drawable.ic_action_toggle_star
+                        : R.drawable.ic_action_toggle_star_outline);
+            }
+        });
 
         final View clickPostTooltip = view.findViewById(R.id.click_post);
         if (Prefs.getBoolean(Keys.POST_CLICKED)) {
