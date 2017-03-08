@@ -4,13 +4,13 @@ import com.sixbynine.waterwheels.model.GraphUser;
 
 public final class GraphUserLoadedEvent {
 
-    private final GraphUser graphUser;
+  private final GraphUser graphUser;
 
-    public GraphUserLoadedEvent(GraphUser graphUser) {
-        this.graphUser = graphUser;
-    }
+  public GraphUserLoadedEvent(GraphUser graphUser) {
+    this.graphUser = graphUser;
+  }
 
-    public GraphUser getGraphUser() {
-        return graphUser;
-    }
+  public GraphUser getGraphUser() {
+    return graphUser;
+  }
 }

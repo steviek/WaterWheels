@@ -12,33 +12,33 @@ import com.squareup.otto.Bus;
 
 public final class MyApplication extends Application {
 
-    private static MyApplication instance;
+  private static MyApplication instance;
 
-    private Bus bus;
-    private Tracker tracker;
+  private Bus bus;
+  private Tracker tracker;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        instance = this;
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        Crittercism.initialize(getApplicationContext(), "5692e3426c33dc0f00f1159f");
-        Prefs.initialize(this);
-        bus = new Bus();
+  @Override
+  public void onCreate() {
+    super.onCreate();
+    instance = this;
+    FacebookSdk.sdkInitialize(getApplicationContext());
+    Crittercism.initialize(getApplicationContext(), "5692e3426c33dc0f00f1159f");
+    Prefs.initialize(this);
+    bus = new Bus();
 
-        GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-        tracker = analytics.newTracker(R.xml.global_tracker);
-    }
+    GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+    tracker = analytics.newTracker(R.xml.global_tracker);
+  }
 
-    public static MyApplication getInstance() {
-        return instance;
-    }
+  public static MyApplication getInstance() {
+    return instance;
+  }
 
-    public Bus getBus() {
-        return bus;
-    }
+  public Bus getBus() {
+    return bus;
+  }
 
-    public Tracker getDefaultTracker() {
-        return tracker;
-    }
+  public Tracker getDefaultTracker() {
+    return tracker;
+  }
 }

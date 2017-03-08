@@ -15,36 +15,36 @@ import com.squareup.otto.Subscribe;
 
 public final class AutoRefreshLegacyReceiver extends BroadcastReceiver {
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        Logger.d("Service wakeup");
-        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+  @Override
+  public void onReceive(Context context, Intent intent) {
+    Logger.d("Service wakeup");
+    PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 
-        final PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "WaterWheels");
+    final PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "WaterWheels");
 
-        wl.acquire();
-        Logger.d("Lock acquired");
+    wl.acquire();
+    Logger.d("Lock acquired");
 
 
-        if (AutoRefreshManager.getBackgroundJobStatus() == AutoRefreshStatus.ANY || isUsingWifi(context)) {
-            Logger.d("onStartJob background poll");
-            MyApplication.getInstance().getBus().register(new Object() {
-                @Subscribe
-                public void onFeedRequestFinished(FeedRequestFinishedEvent event) {
-                    Logger.d("onJobFinished");
-                    MyApplication.getInstance().getBus().unregister(this);
-                    wl.release();
-                }
-            });
-            FacebookManager.getInstance().refreshGroupPosts();
-        } else {
-            wl.release(); //don't make network request if not on wifi and wifi-only
+    if (AutoRefreshManager.getBackgroundJobStatus() == AutoRefreshStatus.ANY || isUsingWifi(context)) {
+      Logger.d("onStartJob background poll");
+      MyApplication.getInstance().getBus().register(new Object() {
+        @Subscribe
+        public void onFeedRequestFinished(FeedRequestFinishedEvent event) {
+          Logger.d("onJobFinished");
+          MyApplication.getInstance().getBus().unregister(this);
+          wl.release();
         }
+      });
+      FacebookManager.getInstance().refreshGroupPosts();
+    } else {
+      wl.release(); //don't make network request if not on wifi and wifi-only
     }
+  }
 
-    private static boolean isUsingWifi(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork != null && activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
-    }
+  private static boolean isUsingWifi(Context context) {
+    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+    return activeNetwork != null && activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
+  }
 }

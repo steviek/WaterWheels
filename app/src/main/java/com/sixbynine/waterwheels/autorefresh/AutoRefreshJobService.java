@@ -17,25 +17,25 @@ import com.squareup.otto.Subscribe;
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public final class AutoRefreshJobService extends JobService {
 
-    @Override
-    public boolean onStartJob(final JobParameters params) {
-        Logger.d("onStartJob background poll");
-        MyApplication.getInstance().getBus().register(new Object() {
-            @Subscribe
-            public void onFeedRequestFinished(FeedRequestFinishedEvent event) {
-                Logger.d("onJobFinished");
-                MyApplication.getInstance().getBus().unregister(this);
-                jobFinished(params, false);
-            }
-        });
-        FacebookManager.getInstance().refreshGroupPosts();
-        return true;
-    }
+  @Override
+  public boolean onStartJob(final JobParameters params) {
+    Logger.d("onStartJob background poll");
+    MyApplication.getInstance().getBus().register(new Object() {
+      @Subscribe
+      public void onFeedRequestFinished(FeedRequestFinishedEvent event) {
+        Logger.d("onJobFinished");
+        MyApplication.getInstance().getBus().unregister(this);
+        jobFinished(params, false);
+      }
+    });
+    FacebookManager.getInstance().refreshGroupPosts();
+    return true;
+  }
 
-    @Override
-    public boolean onStopJob(JobParameters params) {
-        return false;
-    }
+  @Override
+  public boolean onStopJob(JobParameters params) {
+    return false;
+  }
 
 
 }
