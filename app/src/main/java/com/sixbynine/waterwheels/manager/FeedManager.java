@@ -46,7 +46,7 @@ public final class FeedManager {
       String message = post.getMessage();
 
       // Ignore old posts or ones with no message.
-      if (message == null || post.getCreatedTime() <= since) {
+      if (message == null || post.getUpdatedTime() <= since) {
         continue;
       }
 
