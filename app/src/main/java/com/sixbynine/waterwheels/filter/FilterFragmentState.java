@@ -1,10 +1,9 @@
 package com.sixbynine.waterwheels.filter;
 
-import com.google.common.base.Predicate;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.common.base.Predicate;
 import com.sixbynine.waterwheels.model.Offer;
 import com.sixbynine.waterwheels.model.PlaceChoice;
 import com.sixbynine.waterwheels.util.Logger;

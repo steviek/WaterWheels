@@ -144,7 +144,7 @@ public final class FacebookManager implements FacebookCallback<LoginResult> {
                 @Override
                 protected Void doInBackground(JSONObject... params) {
                   OfferDbManager.getInstance().clearStaleOffers();
-                  List<Post> feed = FacebookFunctions.GRAPH_RESPONSE_POST_LIST.apply(params[0]);
+                  List<Post> feed = GraphResponseUtil.getPostsFromGraphResponse(params[0]);
                   Logger.d("Got back %d posts", feed.size());
                   if (feed.isEmpty() && !Prefs.getBoolean(Keys.HAS_SUCCESSFUL_REQUESTS)) {
                     status = FacebookManager.Status.NOT_WATERLOO;

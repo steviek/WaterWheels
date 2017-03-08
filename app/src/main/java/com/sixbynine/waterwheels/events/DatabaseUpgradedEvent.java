@@ -1,4 +1,3 @@
 package com.sixbynine.waterwheels.events;
 
-public class DatabaseUpgradedEvent {
-}
+public class DatabaseUpgradedEvent {}

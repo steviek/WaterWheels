@@ -2,7 +2,6 @@ package com.sixbynine.waterwheels.manager;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
-
 import com.sixbynine.waterwheels.model.Offer;
 import com.sixbynine.waterwheels.model.Place;
 import com.sixbynine.waterwheels.model.Post;
@@ -41,31 +40,44 @@ public final class FeedManager {
     return extractOffers(feed, 0);
   }
 
-  public static List<Offer> extractOffers(List<Post> feed, long since) {
+  static List<Offer> extractOffers(List<Post> feed, long since) {
     List<Offer> list = new ArrayList<>();
     for (Post post : feed) {
       String message = post.getMessage();
-      if (message != null && post.getCreatedTime() > since) {
-        boolean driving = (DRIVING_PATTERN.matcher(message).matches()
-            || PICKUP_PATTERN.matcher(message).find()
-            || DIRECTION_AT_START_PATTERN.matcher(message).matches())
-            && !REQUEST_PATTERN.matcher(message).matches();
-        if (driving) {
-          TravelPoints travelPoints = TravelPoints.tryParse(post.getMessage());
-          long time = getTime(post);
-          if (travelPoints != null && time != -1) {
-            if (time >= System.currentTimeMillis()) {
-              list.add(new Offer(
-                  post,
-                  getPrice(post),
-                  travelPoints.getOrigin(),
-                  travelPoints.getDestination(),
-                  getPhoneNumber(message),
-                  time));
-            }
-          }
-        }
+
+      // Ignore old posts or ones with no message.
+      if (message == null || post.getCreatedTime() <= since) {
+        continue;
       }
+
+      // We only want offers, so check if the user is driving and not picking up.
+      boolean driving = (DRIVING_PATTERN.matcher(message).matches()
+          || PICKUP_PATTERN.matcher(message).find()
+          || DIRECTION_AT_START_PATTERN.matcher(message).matches())
+          && !REQUEST_PATTERN.matcher(message).matches();
+      if (!driving) {
+        continue;
+      }
+
+      // Only deal with posts we can extract travel points from.
+      TravelPoints travelPoints = TravelPoints.tryParse(post.getMessage());
+      if (travelPoints == null) {
+        continue;
+      }
+
+      // Only deal with posts for which we have a valid future time.
+      long time = getTime(post);
+      if (time < System.currentTimeMillis()) {
+        continue;
+      }
+
+      list.add(new Offer(
+          post,
+          getPrice(post),
+          travelPoints.getOrigin(),
+          travelPoints.getDestination(),
+          getPhoneNumber(message),
+          time));
     }
     return list;
   }

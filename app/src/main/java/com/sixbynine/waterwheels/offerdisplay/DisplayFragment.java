@@ -119,46 +119,37 @@ public final class DisplayFragment extends BaseFragment {
       clickPostTooltip.setVisibility(View.VISIBLE);
     }
 
-    view.findViewById(R.id.post_card).setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        if (getContext() != null) {
-          Prefs.putBoolean(Keys.POST_CLICKED, true);
-          clickPostTooltip.setVisibility(View.GONE);
-          startActivity(FacebookIntents.viewPost(getContext(), mOffer.getPost()));
-        }
+    view.findViewById(R.id.post_card).setOnClickListener(v -> {
+      if (getContext() != null) {
+        Prefs.putBoolean(Keys.POST_CLICKED, true);
+        clickPostTooltip.setVisibility(View.GONE);
+        startActivity(FacebookIntents.viewPost(getContext(), mOffer.getPost()));
       }
     });
 
     View phoneLayout = view.findViewById(R.id.phone_layout);
     if (mOffer.getPhoneNumber().isPresent()) {
       phoneLayout.setVisibility(View.VISIBLE);
-      view.findViewById(R.id.call_btn).setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mOffer.getPhoneNumber().get()));
-          startActivity(intent);
-        }
+      view.findViewById(R.id.call_btn).setOnClickListener(v -> {
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mOffer.getPhoneNumber().get()));
+        startActivity(intent);
       });
-      view.findViewById(R.id.text_btn).setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          Intent smsIntent;
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            // Add the phone number in the data
-            Uri uri = Uri.parse("smsto:" + mOffer.getPhoneNumber().get());
-            // Create intent with the action and data
-            smsIntent = new Intent(Intent.ACTION_SENDTO, uri);
-            // Set the message
-            smsIntent.putExtra("sms_body", "Hi, do you still have a spot left?");
-          } else {
-            smsIntent = new Intent(Intent.ACTION_VIEW);
-            smsIntent.setType("vnd.android-dir/mms-sms");
-            smsIntent.putExtra("address", mOffer.getPhoneNumber().get());
-            smsIntent.putExtra("sms_body", "Hi, do you still have a spot left?");
-          }
-          startActivity(smsIntent);
+      view.findViewById(R.id.text_btn).setOnClickListener(v -> {
+        Intent smsIntent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+          // Add the phone number in the data
+          Uri uri = Uri.parse("smsto:" + mOffer.getPhoneNumber().get());
+          // Create intent with the action and data
+          smsIntent = new Intent(Intent.ACTION_SENDTO, uri);
+          // Set the message
+          smsIntent.putExtra("sms_body", "Hi, do you still have a spot left?");
+        } else {
+          smsIntent = new Intent(Intent.ACTION_VIEW);
+          smsIntent.setType("vnd.android-dir/mms-sms");
+          smsIntent.putExtra("address", mOffer.getPhoneNumber().get());
+          smsIntent.putExtra("sms_body", "Hi, do you still have a spot left?");
         }
+        startActivity(smsIntent);
       });
     } else {
       phoneLayout.setVisibility(View.GONE);

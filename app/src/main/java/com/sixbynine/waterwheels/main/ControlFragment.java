@@ -74,7 +74,7 @@ public final class ControlFragment extends BaseFragment {
 
   private static final class MyAdapter extends FragmentStatePagerAdapter
       implements PagerSlidingTabStrip.IconTabProvider {
-    public MyAdapter(FragmentManager fm) {
+    MyAdapter(FragmentManager fm) {
       super(fm);
     }
 

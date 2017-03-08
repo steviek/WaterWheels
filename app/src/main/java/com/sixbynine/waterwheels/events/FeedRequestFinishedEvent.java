@@ -1,4 +1,3 @@
 package com.sixbynine.waterwheels.events;
 
-public final class FeedRequestFinishedEvent {
-}
+public final class FeedRequestFinishedEvent {}

@@ -11,12 +11,12 @@ import com.sixbynine.waterwheels.util.Prefs;
 import java.util.concurrent.TimeUnit;
 
 
-public final class OfferDbHelper extends SQLiteOpenHelper {
+final class OfferDbHelper extends SQLiteOpenHelper {
 
-  public static final int DATABASE_VERSION = 2;
-  public static final String DATABASE_NAME = "offer.db";
+  private static final int DATABASE_VERSION = 2;
+  private static final String DATABASE_NAME = "offer.db";
 
-  public OfferDbHelper(Context context) {
+  OfferDbHelper(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
   }
 
@@ -35,7 +35,6 @@ public final class OfferDbHelper extends SQLiteOpenHelper {
         Offer.COLUMN_NAME_POST_MESSAGE + " TEXT," +
         Offer.COLUMN_NAME_POST_FROM_ID + " TEXT," +
         Offer.COLUMN_NAME_POST_FROM_NAME + " TEXT )");
-
   }
 
   @Override
@@ -48,6 +47,4 @@ public final class OfferDbHelper extends SQLiteOpenHelper {
 
     onCreate(db);
   }
-
-
 }

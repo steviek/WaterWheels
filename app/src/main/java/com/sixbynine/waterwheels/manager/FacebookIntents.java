@@ -10,8 +10,7 @@ import com.sixbynine.waterwheels.model.Profile;
 
 public final class FacebookIntents {
 
-  private FacebookIntents() {
-  }
+  private FacebookIntents() {}
 
   public static Intent viewProfile(Context context, Profile profile) {
     try {
