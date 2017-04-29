@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -52,33 +53,47 @@ public final class MainFragment extends BaseFragment {
     mLoadingLayout = view.findViewById(R.id.loading_layout);
     mNotWaterlooLayout = view.findViewById(R.id.not_waterloo_layout);
 
-    view.findViewById(R.id.how_do_you_do).setOnClickListener(v -> startActivity(new Intent(
+    view.findViewById(R.id.how_do_you_do).setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        startActivity(new Intent(
             Intent.ACTION_VIEW,
-            Uri.parse("https://uwaterloo.ca/find-out-more/admissions"))));
+            Uri.parse("https://uwaterloo.ca/find-out-more/admissions")));
+      }
+    });
 
-    mListView.setOnItemClickListener((parent, view1, position, id) -> {
-      if (getActivity() != null) {
-        Offer offer = (Offer) parent.getItemAtPosition(position);
-        mOnOfferClickListener.onOfferClick(offer);
+    mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (getActivity() != null) {
+          Offer offer = (Offer) parent.getItemAtPosition(position);
+          mOnOfferClickListener.onOfferClick(offer);
+        }
       }
     });
 
     if (BuildConfig.DEBUG) {
-      mListView.setOnItemLongClickListener((parent, view12, position, id) -> {
-        Offer offer = (Offer) parent.getItemAtPosition(position);
-        //FacebookManager.getInstance().buildDebugNotification(offer);
-        //return false;
-        throw new BadParseException(offer.toString());
+      mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+          Offer offer = (Offer) parent.getItemAtPosition(position);
+          //FacebookManager.getInstance().buildDebugNotification(offer);
+          //return false;
+          throw new BadParseException(offer.toString());
+        }
       });
     }
 
-    mSwipeRefreshLayout.setOnRefreshListener(() -> {
-      if (Utils.isNetworkAvailable(getContext())) {
-        mSwipeRefreshLayout.setRefreshing(true);
-        mListView.setEnabled(false);
-        FacebookManager.getInstance().refreshGroupPosts();
-      } else {
-        Toast.makeText(getContext(), R.string.no_network_connection, Toast.LENGTH_SHORT).show();
+    mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+      @Override
+      public void onRefresh() {
+        if (Utils.isNetworkAvailable(getContext())) {
+          mSwipeRefreshLayout.setRefreshing(true);
+          mListView.setEnabled(false);
+          FacebookManager.getInstance().refreshGroupPosts();
+        } else {
+          Toast.makeText(getContext(), R.string.no_network_connection, Toast.LENGTH_SHORT).show();
+        }
       }
     });
 

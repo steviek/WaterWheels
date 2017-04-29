@@ -6,6 +6,7 @@ import com.sixbynine.waterwheels.model.Offer;
 import com.sixbynine.waterwheels.model.Place;
 import com.sixbynine.waterwheels.model.Post;
 import com.sixbynine.waterwheels.model.TravelPoints;
+import com.sixbynine.waterwheels.util.Logger;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -62,6 +63,7 @@ public final class FeedManager {
       // Only deal with posts we can extract travel points from.
       TravelPoints travelPoints = TravelPoints.tryParse(post.getMessage());
       if (travelPoints == null) {
+        Logger.w("Couldn't get travel points for %s", post.getMessage());
         continue;
       }
 

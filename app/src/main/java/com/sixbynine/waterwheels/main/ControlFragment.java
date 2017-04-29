@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.astuetz.PagerSlidingTabStrip;
 import com.sixbynine.waterwheels.BaseFragment;
 import com.sixbynine.waterwheels.R;
+import com.sixbynine.waterwheels.abstracts.AbstractOnPageChangeListener;
 import com.sixbynine.waterwheels.filter.FilterFragment;
 import com.sixbynine.waterwheels.offerdisplay.OnOfferClickListener;
 import com.sixbynine.waterwheels.settings.SettingsFragment;
@@ -23,6 +24,7 @@ public final class ControlFragment extends BaseFragment {
 
   private ViewPager mPager;
   private PagerSlidingTabStrip mTabs;
+  private MyAdapter mAdapter;
   private OnOfferClickListener mOnOfferClickListener;
 
   @Override
@@ -47,9 +49,27 @@ public final class ControlFragment extends BaseFragment {
     mPager = (ViewPager) view.findViewById(R.id.pager);
     mTabs = (PagerSlidingTabStrip) view.findViewById(R.id.tabs);
 
-    mPager.setAdapter(new MyAdapter(getChildFragmentManager()));
+    mAdapter = new MyAdapter(getChildFragmentManager());
+    mPager.setAdapter(mAdapter);
 
     mTabs.setViewPager(mPager);
+    mTabs.setOnPageChangeListener(new AbstractOnPageChangeListener() {
+      @Override
+      public void onPageSelected(int position) {
+        // Hacky, I'm doing this to ignore faulty events that Android is sending
+        SettingsFragment settingsFragment = (SettingsFragment) mAdapter.fragments[2];
+
+        if (settingsFragment == null) {
+          return;
+        }
+
+        if (position == 2) {
+          settingsFragment.onShowingChanged(true);
+        } else {
+          settingsFragment.onShowingChanged(false);
+        }
+      }
+    });
 
     Bundle args = getArguments();
 

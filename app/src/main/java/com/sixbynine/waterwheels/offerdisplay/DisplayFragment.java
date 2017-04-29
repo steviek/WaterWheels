@@ -1,10 +1,14 @@
 package com.sixbynine.waterwheels.offerdisplay;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -119,43 +123,112 @@ public final class DisplayFragment extends BaseFragment {
       clickPostTooltip.setVisibility(View.VISIBLE);
     }
 
-    view.findViewById(R.id.post_card).setOnClickListener(v -> {
-      if (getContext() != null) {
-        Prefs.putBoolean(Keys.POST_CLICKED, true);
-        clickPostTooltip.setVisibility(View.GONE);
-        startActivity(FacebookIntents.viewPost(getContext(), mOffer.getPost()));
+    view.findViewById(R.id.post_card).setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (getContext() != null) {
+          Prefs.putBoolean(Keys.POST_CLICKED, true);
+          clickPostTooltip.setVisibility(View.GONE);
+          startActivity(FacebookIntents.viewPost(getContext(), mOffer.getPost()));
+        }
       }
     });
 
     View phoneLayout = view.findViewById(R.id.phone_layout);
+    View flatPhoneLayout = view.findViewById(R.id.phone_layout_flat);
     if (mOffer.getPhoneNumber().isPresent()) {
-      phoneLayout.setVisibility(View.VISIBLE);
-      view.findViewById(R.id.call_btn).setOnClickListener(v -> {
-        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mOffer.getPhoneNumber().get()));
-        startActivity(intent);
-      });
-      view.findViewById(R.id.text_btn).setOnClickListener(v -> {
-        Intent smsIntent;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-          // Add the phone number in the data
-          Uri uri = Uri.parse("smsto:" + mOffer.getPhoneNumber().get());
-          // Create intent with the action and data
-          smsIntent = new Intent(Intent.ACTION_SENDTO, uri);
-          // Set the message
-          smsIntent.putExtra("sms_body", "Hi, do you still have a spot left?");
-        } else {
-          smsIntent = new Intent(Intent.ACTION_VIEW);
-          smsIntent.setType("vnd.android-dir/mms-sms");
-          smsIntent.putExtra("address", mOffer.getPhoneNumber().get());
-          smsIntent.putExtra("sms_body", "Hi, do you still have a spot left?");
+      final Intent phoneIntent = getPhoneIntent();
+      final Intent smsIntent = getSmsIntent();
+
+      Pair<Drawable, CharSequence> phoneIntentDetails = getDisplayDetailsForIntent(phoneIntent);
+      Pair<Drawable, CharSequence> smsIntentDetails = getDisplayDetailsForIntent(smsIntent);
+
+      TextView phoneButton;
+      TextView smsButton;
+      if (phoneIntentDetails == null || smsIntentDetails == null) {
+        phoneLayout.setVisibility(View.VISIBLE);
+        flatPhoneLayout.setVisibility(View.GONE);
+        phoneButton = (TextView) view.findViewById(R.id.phone_btn);
+        smsButton = (TextView) view.findViewById(R.id.sms_btn);
+      } else {
+        phoneLayout.setVisibility(View.GONE);
+        flatPhoneLayout.setVisibility(View.VISIBLE);
+        phoneButton = (TextView) view.findViewById(R.id.phone_btn_flat);
+        smsButton = (TextView) view.findViewById(R.id.sms_btn_flat);
+        phoneButton.setCompoundDrawablesWithIntrinsicBounds(
+            phoneIntentDetails.first, null, null, null);
+        smsButton.setCompoundDrawablesWithIntrinsicBounds(
+            smsIntentDetails.first, null, null, null);
+      }
+
+      phoneButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          startActivity(phoneIntent);
         }
-        startActivity(smsIntent);
+      });
+      smsButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          startActivity(smsIntent);
+        }
       });
     } else {
       phoneLayout.setVisibility(View.GONE);
+      flatPhoneLayout.setVisibility(View.GONE);
     }
 
     return view;
+  }
+
+  private Intent getPhoneIntent() {
+    return new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mOffer.getPhoneNumber().get()));
+  }
+
+  private Intent getSmsIntent() {
+    Intent smsIntent;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      // Add the phone number in the data
+      Uri uri = Uri.parse("smsto:" + mOffer.getPhoneNumber().get());
+      // Create intent with the action and data
+      smsIntent = new Intent(Intent.ACTION_SENDTO, uri);
+      // Set the message
+      smsIntent.putExtra("sms_body", "Hi, do you still have a spot left?");
+    } else {
+      smsIntent = new Intent(Intent.ACTION_VIEW);
+      smsIntent.setType("vnd.android-dir/mms-sms");
+      smsIntent.putExtra("address", mOffer.getPhoneNumber().get());
+      smsIntent.putExtra("sms_body", "Hi, do you still have a spot left?");
+    }
+    return smsIntent;
+  }
+
+  /** Gets a label and icon for this intent if there is just one match, null otherwise */
+  private Pair<Drawable, CharSequence> getDisplayDetailsForIntent(Intent intent) {
+    PackageManager packageManager = getContext().getPackageManager();
+    ResolveInfo resolveInfo = packageManager.resolveActivity(intent, 0);
+    if (resolveInfo == null
+        || resolveInfo.activityInfo == null
+        || resolveInfo.activityInfo.processName == null
+        || resolveInfo.activityInfo.processName.equals("system:ui")) {
+      return null;
+    }
+
+    CharSequence label = resolveInfo.activityInfo.loadLabel(packageManager);
+    if (label == null) {
+      label = resolveInfo.loadLabel(packageManager);
+    }
+
+    Drawable icon = resolveInfo.activityInfo.loadIcon(packageManager);
+    if (icon == null) {
+      icon = resolveInfo.loadIcon(packageManager);
+    }
+
+    if (label == null || icon == null) {
+      return null;
+    }
+
+    return new Pair<>(icon, label);
   }
 
   @Override

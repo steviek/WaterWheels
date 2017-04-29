@@ -17,6 +17,12 @@ public final class Logger {
     }
   }
 
+  public static void w(String message, Object... args) {
+    if (BuildConfig.DEBUG) {
+      Log.w(TAG, String.format(message, args));
+    }
+  }
+
   public static void e(Throwable e) {
     if (BuildConfig.DEBUG) {
       Log.e(TAG, e.getMessage(), e);

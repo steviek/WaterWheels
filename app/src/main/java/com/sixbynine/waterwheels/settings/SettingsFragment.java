@@ -70,13 +70,6 @@ public final class SettingsFragment extends BaseFragment {
     mSound = (CompoundButton) view.findViewById(R.id.sound);
     mVibrate = (CompoundButton) view.findViewById(R.id.vibrate);
 
-    mRefresh.setOnCheckedChangeListener(mRefreshCheckedChangeListener);
-    mWifiOnly.setOnCheckedChangeListener(mRefreshCheckedChangeListener);
-    mNotifications.setOnCheckedChangeListener(mNotificationsCheckedChangeListener);
-    mLight.setOnCheckedChangeListener(mNotificationsCheckedChangeListener);
-    mSound.setOnCheckedChangeListener(mNotificationsCheckedChangeListener);
-    mVibrate.setOnCheckedChangeListener(mNotificationsCheckedChangeListener);
-
     mDebugText = (TextView) view.findViewById(R.id.debug_text);
     if (BuildConfig.DEBUG) {
       mDebugText.setVisibility(View.VISIBLE);
@@ -91,6 +84,25 @@ public final class SettingsFragment extends BaseFragment {
   public void onResume() {
     super.onResume();
     syncViews();
+  }
+
+  /** Android is sending faulty events, so only set the listeners when the fragment is showing. */
+  public void onShowingChanged(boolean showing) {
+    if (showing) {
+      mRefresh.setOnCheckedChangeListener(mRefreshCheckedChangeListener);
+      mWifiOnly.setOnCheckedChangeListener(mRefreshCheckedChangeListener);
+      mNotifications.setOnCheckedChangeListener(mNotificationsCheckedChangeListener);
+      mLight.setOnCheckedChangeListener(mNotificationsCheckedChangeListener);
+      mSound.setOnCheckedChangeListener(mNotificationsCheckedChangeListener);
+      mVibrate.setOnCheckedChangeListener(mNotificationsCheckedChangeListener);
+    } else {
+      mRefresh.setOnCheckedChangeListener(null);
+      mWifiOnly.setOnCheckedChangeListener(null);
+      mNotifications.setOnCheckedChangeListener(null);
+      mLight.setOnCheckedChangeListener(null);
+      mSound.setOnCheckedChangeListener(null);
+      mVibrate.setOnCheckedChangeListener(null);
+    }
   }
 
   @Subscribe

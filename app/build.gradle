@@ -8,11 +8,8 @@ android {
         applicationId "com.sixbynine.waterwheels"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 11
-        versionName "1.8"
-        jackOptions {
-            enabled true
-        }
+        versionCode 12
+        versionName "1.9"
     }
 
     buildTypes {
@@ -20,10 +17,6 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
-    compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
     }
 }
 
