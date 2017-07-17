@@ -6,4 +6,5 @@
     <color name="textPrimary">#212121</color>
     <color name="textSecondary">#727272</color>
     <color name="dividerColor">#B6B6B6</color>
+    <color name="ic_launcher_background">#FCD450</color>
 </resources>

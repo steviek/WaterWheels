@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+/**
+ * Enum to represent a place.  You can never delete anything or it will cause a crash!
+ * Simply change the display name and make the regex empty to phase out a location.
+ */
 public enum Place {
   ANCASTER("Ancaster", "Ancaster", 43.217779, -79.987283),
   BARRIE("Barrie", "Barrie", 44.389356, -79.690332),
@@ -30,6 +34,7 @@ public enum Place {
   GUELPH("Guelph", "Guelph", 43.544805, -80.248167),
   HAMILTON("Hamilton", "Hamilton", 43.250021, -79.866091),
   HWY_7_LESLIE("Highway 7 & Leslie", "HWY 7(\\s*(and|/|&)\\s*)Leslie", 43.844296, -79.382370, PlaceGroup.MARKHAM_RICHMOND_HILL),
+  KING_UNI("King & University", "King\\s?and\\s?Uni|King\\s?at\\s?Uni", 43.4761623, -80.527153, PlaceGroup.WATERLOO),
   KINGSTON("Kingston", "Kingston", 44.231172, -76.485954),
   KIPLING("Kipling", "Kipling", 43.637752, -79.535050, PlaceGroup.TORONTO),
   KITCHENER("Kitchener", "Kitchener", 43.449385, -80.493128),
@@ -49,10 +54,11 @@ public enum Place {
   PEARSON("Pearson Airport", "Pearson|Airport", 43.677718, -79.624820),
   PREMIUM_OUTLETS("Premium Outlets", "Premium outlet", 43.575347, -79.829407),
   RICHMOND_HILL("Richmond Hill", "Richmond\\s?Hill|RHill", 43.840186, -79.425296, PlaceGroup.MARKHAM_RICHMOND_HILL),
+  SARNIA("Sarnia", "Sarnia", 42.6205332,-82.8878676),
   SCARBOROUGH("Scarborough", "Scarborough", 43.775914, -79.257767, PlaceGroup.SCARBOROUGH),
   SCHOMBERG("Schomberg", "Schomberg", 44.000873, -79.683147),
   SHELBURNE("Shelburne", "Shelburne", 44.079119, -80.201173),
-  SHEPPARD("Sheppard", "Sheppard", 43.7620348, -79.4118972, PlaceGroup.TORONTO),
+  SHEPPARD("Yonge & Sheppard", "Sheppard", 43.761548, -79.411624, PlaceGroup.TORONTO),
   SQUARE_ONE("Square One", "Square?\\s?One|sq\\s?1|sq one", 43.589045, -79.644120, PlaceGroup.MISSISSAUGA),
   STC("STC", "STC", 43.775914, -79.257767, PlaceGroup.SCARBOROUGH),
   ST_CATHERINES("St. Catherine's", "St. Catherine's|Brock", 43.1175731, -79.2498812),
@@ -65,7 +71,7 @@ public enum Place {
   UNION("Union Station", "Union", 43.645223, -79.380828, PlaceGroup.TORONTO),
   VAUGHAN("Vaughan", "Vaughan", 43.825463, -79.537989),
   WARDEN_STEELES("Warden & Steeles", "Warden\\s*[\"and\"|/|&]\\s*Steeles", 43.819563, -79.324523, PlaceGroup.TORONTO, PlaceGroup.SCARBOROUGH, PlaceGroup.MARKHAM_RICHMOND_HILL),
-  YONGE_SHEPPARD("Yonge & Sheppard", "Yo?u?nge?(\\s*(and|/|&)\\s*)Sheppard", 43.761548, -79.411624, PlaceGroup.TORONTO),
+  YONGE_SHEPPARD("Yonge & Sheppard", "Yo?u?nge?(\\s*(and|/|&)\\s*)Sheppard|Sheppard|Shepherd", 43.761548, -79.411624, PlaceGroup.TORONTO),
   YONGE_STEELES("Yonge & Steeles", "Yo?u?nge?(\\s*(and|/|&)\\s*)Steeles", 43.798004, -79.419570, PlaceGroup.TORONTO),
   YORK_MILLS("York Mills Station", "York\\s?Mills", 43.744842, -79.405686, PlaceGroup.TORONTO),
   YORKDALE("Yorkdale", "Yorkdale", 43.725140, -79.451827, PlaceGroup.TORONTO);

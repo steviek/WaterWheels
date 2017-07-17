@@ -31,7 +31,7 @@ public final class FeedManager {
   private static final Pattern PICKUP_PATTERN = Pattern.compile("pick\\s?up|drop\\s?off", Pattern.CASE_INSENSITIVE);
   private static final Pattern REQUEST_PATTERN = Pattern.compile("(.|\n)*Looking(.|\n)*|(.|\n)*anyone driv(.|\n)*|Request(.|\n)*|(.|\n)*need a ride(.|\n)*", Pattern.CASE_INSENSITIVE);
 
-  private static final String DIRECTION_AT_START = "^(" + Place.REGEX + ")\\s*(to|-+>|>+)\\s*(" + Place.REGEX + ")(.|\\s)*$";
+  private static final String DIRECTION_AT_START = "^(" + Place.REGEX + ")\\s*(too?|-+>|>+)\\s*(" + Place.REGEX + ")(.|\\s)*$";
   private static final Pattern DIRECTION_AT_START_PATTERN = Pattern.compile(DIRECTION_AT_START, Pattern.CASE_INSENSITIVE);
 
   private FeedManager() {

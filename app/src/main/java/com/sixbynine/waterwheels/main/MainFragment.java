@@ -77,9 +77,9 @@ public final class MainFragment extends BaseFragment {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
           Offer offer = (Offer) parent.getItemAtPosition(position);
-          //FacebookManager.getInstance().buildDebugNotification(offer);
-          //return false;
-          throw new BadParseException(offer.toString());
+          FacebookManager.getInstance().buildDebugNotification(offer);
+          return true;
+          //throw new BadParseException(offer.toString());
         }
       });
     }

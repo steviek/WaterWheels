@@ -5,11 +5,11 @@ import java.util.regex.Pattern;
 
 public final class TravelPoints {
 
-  private static final String TO_REGEX = "\\s*(\\sto\\s|>+|-+\\s?>|-|→)\\s*";
+  private static final String TO_REGEX = "\\s*(\\stoo?\\s|>+|-+\\s?>|-|→)\\s*";
   private static final String A_B_SIMPLE_REGEX = "(" + Place.REGEX + ")" + TO_REGEX + "(" + Place.REGEX + ")";
   private static final String A_B_FULL_REGEX = "(" + Place.REGEX + ").*" + TO_REGEX + ".*(" + Place.REGEX + ")";
   private static final String B_A_REGEX = "\\sto\\s+(" + Place.REGEX + ").*from.*(" + Place.REGEX + ")";
-  private static final String DESTINATION_REGEX = "\\s(to|leaving for)\\s+(" + Place.REGEX + ")";
+  private static final String DESTINATION_REGEX = "\\s(too?|leaving for)\\s+(" + Place.REGEX + ")";
   private static final String ORIGIN_REGEX = "\\sfrom\\s+(" + Place.REGEX + ")";
   private static final Pattern A_B_SIMPLE_PATTERN = Pattern.compile(A_B_SIMPLE_REGEX, Pattern.CASE_INSENSITIVE);
   private static final Pattern A_B_FULL_PATTERN = Pattern.compile(A_B_FULL_REGEX, Pattern.CASE_INSENSITIVE);

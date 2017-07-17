@@ -2,6 +2,7 @@ package com.sixbynine.waterwheels.main;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
@@ -80,6 +81,15 @@ public final class MainActivity extends BaseActivity implements OnOfferClickList
       if (showOffer != null) {
         onOfferClick(showOffer);
       }
+    }
+  }
+
+  @Override
+  protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    Offer showOffer = getIntent().getParcelableExtra(Keys.SHOW_OFFER);
+    if (showOffer != null) {
+      onOfferClick(showOffer);
     }
   }
 

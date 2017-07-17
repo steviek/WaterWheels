@@ -9,7 +9,6 @@ import android.os.PowerManager;
 
 import com.sixbynine.waterwheels.MyApplication;
 import com.sixbynine.waterwheels.events.FeedRequestFinishedEvent;
-import com.sixbynine.waterwheels.manager.FacebookManager;
 import com.sixbynine.waterwheels.util.Logger;
 import com.squareup.otto.Subscribe;
 
@@ -36,7 +35,6 @@ public final class AutoRefreshLegacyReceiver extends BroadcastReceiver {
           wl.release();
         }
       });
-      FacebookManager.getInstance().refreshGroupPosts();
     } else {
       wl.release(); //don't make network request if not on wifi and wifi-only
     }

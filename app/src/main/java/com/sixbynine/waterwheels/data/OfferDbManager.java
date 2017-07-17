@@ -1,13 +1,12 @@
 package com.sixbynine.waterwheels.data;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import com.sixbynine.waterwheels.MyApplication;
 import com.sixbynine.waterwheels.events.DatabaseUpgradedEvent;
 import com.sixbynine.waterwheels.manager.FeedManager;
@@ -25,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 public final class OfferDbManager {
 
-  private static final int ALGORITHM_VERSION = 2;
+  private static final int ALGORITHM_VERSION = 3;
 
   private static OfferDbManager instance;
 

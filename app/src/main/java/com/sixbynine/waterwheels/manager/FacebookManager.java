@@ -104,6 +104,10 @@ public final class FacebookManager implements FacebookCallback<LoginResult> {
     makeGroupPostsRequest(true);
   }
 
+  public void maybeRefreshGroupPosts() {
+    makeGroupPostsRequest(false);
+  }
+
   @Subscribe
   public void onDatabaseUpgradedEvent(DatabaseUpgradedEvent event) {
     makeGroupPostsRequest(false);
@@ -223,59 +227,61 @@ public final class FacebookManager implements FacebookCallback<LoginResult> {
 
     int size = Iterables.size(offers);
 
-    if (size > 0 && notificationStatus.isEnabled()) {
-      Context context = MyApplication.getInstance();
-      boolean is24hr = DateFormat.is24HourFormat(context);
-
-      Offer offer = Iterables.getFirst(offers, null);
-      Date date = new Date(offer.getTime());
-      String formattedTime = is24hr ? sdf24hrShort.format(date) : sdf12hrShort.format(date);
-
-      String title = size == 1
-          ? context.getString(R.string.new_ride)
-          : context.getString(R.string.x_new_rides, size);
-
-      String text = context.getString(
-          size == 1 ? R.string.offer_format : R.string.offer_format_multiple,
-          offer.getOrigin().getName(),
-          offer.getDestination().getName(),
-          formattedTime);
-
-      NotificationCompat.Builder builder = new NotificationCompat.Builder(MyApplication.getInstance())
-          .setSmallIcon(R.drawable.ic_notification)
-          .setContentTitle(title)
-          .setContentText(text);
-
-      if (notificationStatus.shouldLight()) {
-        builder.setLights(Color.YELLOW, 3000, 3000);
-      }
-
-      if (notificationStatus.shouldSound()) {
-        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        builder.setSound(alarmSound);
-      }
-
-      if (notificationStatus.shouldVibrate()) {
-        builder.setVibrate(new long[]{500, 1000});
-      }
-
-      Intent intent = new Intent(context, MainActivity.class);
-      intent.putExtra(Keys.SHOW_FILTER, true);
-
-      if (size == 1) {
-        intent.putExtra(Keys.SHOW_OFFER, offer);
-      }
-
-      PendingIntent pIntent = PendingIntent.getActivity(
-          context,
-          0,
-          intent,
-          PendingIntent.FLAG_UPDATE_CURRENT);
-      builder.setContentIntent(pIntent);
-
-      NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-      manager.notify(1, builder.build());
+    if (size == 0 || !notificationStatus.isEnabled()) {
+      return;
     }
+
+    Context context = MyApplication.getInstance();
+    boolean is24hr = DateFormat.is24HourFormat(context);
+
+    Offer offer = Iterables.getFirst(offers, null);
+    Date date = new Date(offer.getTime());
+    String formattedTime = is24hr ? sdf24hrShort.format(date) : sdf12hrShort.format(date);
+
+    String title = size == 1
+        ? context.getString(R.string.new_ride)
+        : context.getString(R.string.x_new_rides, size);
+
+    String text = context.getString(
+        size == 1 ? R.string.offer_format : R.string.offer_format_multiple,
+        offer.getOrigin().getName(),
+        offer.getDestination().getName(),
+        formattedTime);
+
+    NotificationCompat.Builder builder = new NotificationCompat.Builder(MyApplication.getInstance())
+        .setSmallIcon(R.drawable.ic_notification)
+        .setContentTitle(title)
+        .setContentText(text);
+
+    if (notificationStatus.shouldLight()) {
+      builder.setLights(Color.YELLOW, 3000, 3000);
+    }
+
+    if (notificationStatus.shouldSound()) {
+      Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+      builder.setSound(alarmSound);
+    }
+
+    if (notificationStatus.shouldVibrate()) {
+      builder.setVibrate(new long[]{500, 1000});
+    }
+
+    Intent intent = new Intent(context, MainActivity.class);
+    intent.putExtra(Keys.SHOW_FILTER, true);
+
+    if (size == 1) {
+      intent.putExtra(Keys.SHOW_OFFER, offer);
+    }
+
+    PendingIntent pIntent = PendingIntent.getActivity(
+        context,
+        0,
+        intent,
+        PendingIntent.FLAG_UPDATE_CURRENT);
+    builder.setContentIntent(pIntent);
+
+    NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+    manager.notify(1, builder.build());
   }
 
   public void buildDebugNotification(Offer offer) {

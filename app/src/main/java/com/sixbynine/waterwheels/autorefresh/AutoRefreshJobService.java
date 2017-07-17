@@ -28,7 +28,7 @@ public final class AutoRefreshJobService extends JobService {
         jobFinished(params, false);
       }
     });
-    FacebookManager.getInstance().refreshGroupPosts();
+    FacebookManager.getInstance().maybeRefreshGroupPosts();
     return true;
   }
 
