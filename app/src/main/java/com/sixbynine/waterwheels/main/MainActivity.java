@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 
 import com.facebook.appevents.AppEventsLogger;
 import com.sixbynine.waterwheels.BaseActivity;
@@ -18,11 +19,10 @@ import com.sixbynine.waterwheels.offerdisplay.DisplayFragment;
 import com.sixbynine.waterwheels.offerdisplay.OnOfferClickListener;
 import com.sixbynine.waterwheels.util.Keys;
 
-import java.util.List;
-
 public final class MainActivity extends BaseActivity implements OnOfferClickListener {
 
   private static boolean inForeground;
+
 
   private State state;
   private Offer displayOffer;
@@ -55,8 +55,8 @@ public final class MainActivity extends BaseActivity implements OnOfferClickList
 
     boolean showFilter = getIntent().getBooleanExtra(Keys.SHOW_FILTER, false);
 
-    List<Fragment> fragments = getSupportFragmentManager().getFragments();
-    if (fragments == null) {
+    if (savedInstanceState == null
+        || ((ViewGroup) findViewById(R.id.content_frame)).getChildCount() == 0) {
       Fragment fragment;
       switch (state) {
         case LOGIN:
