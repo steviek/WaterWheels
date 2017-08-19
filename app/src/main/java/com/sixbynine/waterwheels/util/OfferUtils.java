@@ -20,8 +20,8 @@ public final class OfferUtils {
   private static final SimpleDateFormat sdf24hrShort = new SimpleDateFormat("H:mm");
   private static final SimpleDateFormat sdf12hrShort = new SimpleDateFormat("h:mm a");
   private static final SimpleDateFormat sdfDay = new SimpleDateFormat("EEEE");
-  private static final SimpleDateFormat sdfMedium = new SimpleDateFormat("MMM dd");
-  private static final SimpleDateFormat sdfLong = new SimpleDateFormat("EEE MMM dd");
+  private static final SimpleDateFormat sdfMedium = new SimpleDateFormat("MMM d");
+  private static final SimpleDateFormat sdfLong = new SimpleDateFormat("EEE MMM d");
 
   public static String makePrettyTimestamp(Context context, long time) {
     // get a calendar and set it to the start of the next day

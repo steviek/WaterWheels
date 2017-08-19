@@ -8,8 +8,8 @@ android {
         applicationId "com.sixbynine.waterwheels"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 17
-        versionName "1.14"
+        versionCode 18
+        versionName "1.15"
     }
 
     buildTypes {

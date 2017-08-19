@@ -52,7 +52,7 @@ public final class FacebookManager implements FacebookCallback<LoginResult> {
 
   private static FacebookManager instance;
   private static final String CARPOOL_GROUP_ID = "372772186164295";
-  private static final boolean SINCE_BROKEN = false;
+  private static final boolean SINCE_BROKEN = true;
 
   private boolean makingGroupRequest;
   private Status status = Status.INITIALIZED;
@@ -110,7 +110,7 @@ public final class FacebookManager implements FacebookCallback<LoginResult> {
 
   @Subscribe
   public void onDatabaseUpgradedEvent(DatabaseUpgradedEvent event) {
-    makeGroupPostsRequest(false);
+    makeGroupPostsRequest(true);
   }
 
   private void makeGroupPostsRequest(boolean force) {
@@ -130,7 +130,15 @@ public final class FacebookManager implements FacebookCallback<LoginResult> {
 
     final long queryTime = System.currentTimeMillis();
     long lastWeek = queryTime - TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS);
-    final long lastUpdateTime = Math.max(Prefs.getLong(Keys.LAST_UPDATED), lastWeek);
+    final long lastUpdateTime;
+
+    if (Prefs.getBoolean("needs_bug_fix_18", true)) {
+      Prefs.putLong(Keys.LAST_UPDATED, lastWeek);
+      lastUpdateTime = lastWeek;
+      Prefs.putBoolean("needs_bug_fix_18", false);
+    } else {
+      lastUpdateTime = Math.max(Prefs.getLong(Keys.LAST_UPDATED), lastWeek);
+    }
 
     Logger.d("Last update time: " + lastUpdateTime);
 

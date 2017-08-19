@@ -194,7 +194,7 @@ public final class FeedManager {
 
   private static final String MONTH_REGEX = "(Janu?a?r?y?|Febr?u?a?r?y?|Marc?h?|Apri?l?|May|June?|July?|Augu?s?t?|Sept?e?m?b?e?r?|Octo?b?e?r?|Nove?m?b?e?r?|Dece?m?b?e?r?)";
   private static final Pattern DAY_THE_DATE_PATTERN = Pattern.compile(Day.regex() + " the " + "(\\d\\d?)(st|nd|rd|th)", Pattern.CASE_INSENSITIVE);
-  private static final Pattern MONTH_DAY_PATTERN = Pattern.compile(MONTH_REGEX + "\\s?(\\d\\d?)\\D", Pattern.CASE_INSENSITIVE);
+  private static final Pattern MONTH_DAY_PATTERN = Pattern.compile(MONTH_REGEX + "\\s?(\\d\\d?)\\D(\\s+|st|th|nd|rd)", Pattern.CASE_INSENSITIVE);
   private static final Pattern DAY_MONTH_PATTERN = Pattern.compile("\\D(\\d\\d?)(st|nd|rd|th)?\\s?" + MONTH_REGEX, Pattern.CASE_INSENSITIVE);
   private static final Pattern X_PM_PATTERN = Pattern.compile("(\\d\\d?)([:.]?(\\d\\d))?\\s?((a.?m.?)|(p.?m.?))", Pattern.CASE_INSENSITIVE);
   private static final Pattern AT_X = Pattern.compile("((at|leave?i?n?g?)(\\saround)?|around)\\s(\\d\\d?)[:.]?(\\d\\d)?\\D", Pattern.CASE_INSENSITIVE);
