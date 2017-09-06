@@ -31,6 +31,8 @@ import java.util.concurrent.TimeUnit;
 
 public final class DisplayFragment extends BaseFragment {
 
+  private static final boolean USE_FLAT_PHONE_LAYOUT = true;
+
   private Offer mOffer;
   private Toolbar mToolbar;
 
@@ -67,38 +69,38 @@ public final class DisplayFragment extends BaseFragment {
       return view;
     }
 
-    mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    mToolbar = view.findViewById(R.id.toolbar);
 
-    TextView timestamp = (TextView) view.findViewById(R.id.timestamp);
+    TextView timestamp = view.findViewById(R.id.timestamp);
     timestamp.setText(OfferUtils.makePrettyTimestamp(getContext(), mOffer.getTime()));
 
-    TextView price = (TextView) view.findViewById(R.id.price);
+    TextView price = view.findViewById(R.id.price);
     if (mOffer.getPrice().isPresent()) {
-      price.setText("$" + mOffer.getPrice().get());
+      price.setText(getString(R.string.price, mOffer.getPrice().get()));
     } else {
       price.setVisibility(View.INVISIBLE);
     }
 
-    TextView origin = (TextView) view.findViewById(R.id.origin);
+    TextView origin = view.findViewById(R.id.origin);
     origin.setText(getResources().getString(R.string.from_x, mOffer.getOrigin().getName()));
 
-    TextView destination = (TextView) view.findViewById(R.id.destination);
+    TextView destination = view.findViewById(R.id.destination);
     destination.setText(getResources().getString(R.string.to_x, mOffer.getDestination().getName()));
 
-    ImageView profileImageView = (ImageView) view.findViewById(R.id.profile_image);
+    ImageView profileImageView = view.findViewById(R.id.profile_image);
     Picasso.with(getContext())
         .load(FacebookManager.getProfilePicUrlFromId(mOffer.getPost().getFrom().getId()))
         .noFade()
         .into(profileImageView);
 
-    TextView profileName = (TextView) view.findViewById(R.id.profile_name);
+    TextView profileName = view.findViewById(R.id.profile_name);
     profileName.setText(mOffer.getPost().getFrom().getName());
 
-    TextView postTime = (TextView) view.findViewById(R.id.post_created_time);
+    TextView postTime = view.findViewById(R.id.post_created_time);
     long createdTime = TimeUnit.MILLISECONDS.convert(mOffer.getPost().getCreatedTime(), TimeUnit.SECONDS);
     postTime.setText(OfferUtils.makePrettyPostTime(getContext(), createdTime));
 
-    final ImageView map = (ImageView) view.findViewById(R.id.map);
+    final ImageView map = view.findViewById(R.id.map);
     map.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
       @Override
       public void onGlobalLayout() {
@@ -113,7 +115,7 @@ public final class DisplayFragment extends BaseFragment {
       }
     });
 
-    TextView message = (TextView) view.findViewById(R.id.message);
+    TextView message = view.findViewById(R.id.message);
     message.setText(mOffer.getPost().getMessage());
 
     final View clickPostTooltip = view.findViewById(R.id.click_post);
@@ -143,22 +145,24 @@ public final class DisplayFragment extends BaseFragment {
       Pair<Drawable, CharSequence> phoneIntentDetails = getDisplayDetailsForIntent(phoneIntent);
       Pair<Drawable, CharSequence> smsIntentDetails = getDisplayDetailsForIntent(smsIntent);
 
-      TextView phoneButton;
-      TextView smsButton;
-      if (phoneIntentDetails == null || smsIntentDetails == null) {
+      View phoneButton;
+      View smsButton;
+      if (phoneIntentDetails == null || smsIntentDetails == null || !USE_FLAT_PHONE_LAYOUT) {
         phoneLayout.setVisibility(View.VISIBLE);
         flatPhoneLayout.setVisibility(View.GONE);
-        phoneButton = (TextView) view.findViewById(R.id.phone_btn);
-        smsButton = (TextView) view.findViewById(R.id.sms_btn);
+        phoneButton = view.findViewById(R.id.phone_btn);
+        smsButton = view.findViewById(R.id.sms_btn);
       } else {
         phoneLayout.setVisibility(View.GONE);
         flatPhoneLayout.setVisibility(View.VISIBLE);
-        phoneButton = (TextView) view.findViewById(R.id.phone_btn_flat);
-        smsButton = (TextView) view.findViewById(R.id.sms_btn_flat);
-        phoneButton.setCompoundDrawablesWithIntrinsicBounds(
-            phoneIntentDetails.first, null, null, null);
-        smsButton.setCompoundDrawablesWithIntrinsicBounds(
-            smsIntentDetails.first, null, null, null);
+        phoneButton = view.findViewById(R.id.phone_btn_flat);
+        smsButton = view.findViewById(R.id.sms_btn_flat);
+
+        ImageView phoneIcon = view.findViewById(R.id.phone_icon);
+        phoneIcon.setImageDrawable(phoneIntentDetails.first);
+
+        ImageView smsIcon = view.findViewById(R.id.sms_icon);
+        smsIcon.setImageDrawable(smsIntentDetails.first);
       }
 
       phoneButton.setOnClickListener(new View.OnClickListener() {

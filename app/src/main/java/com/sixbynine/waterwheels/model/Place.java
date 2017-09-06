@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
  * Simply change the display name and make the regex empty to phase out a location.
  */
 public enum Place {
+  AJAX("Ajax", "Ajax", 43.854897, -79.055149),
   ANCASTER("Ancaster", "Ancaster", 43.217779, -79.987283),
   BARRIE("Barrie", "Barrie", 44.389356, -79.690332),
   BLUE_MOUNTAIN("Blue Mountain", "Blue\\s?Mountain", 44.676161, -77.946865),

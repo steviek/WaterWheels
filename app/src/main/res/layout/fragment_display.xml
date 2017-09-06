@@ -214,23 +214,66 @@
     android:orientation="horizontal"
     android:layout_alignParentBottom="true"
     android:background="@android:color/white"
-    android:elevation="16dp">
+    android:elevation="24dp">
 
-    <TextView
+    <LinearLayout
       android:id="@+id/phone_btn_flat"
-      style="@style/FlatButton"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
       android:layout_weight="1"
-      android:text="@string/call"/>
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:background="?attr/selectableItemBackground">
+
+      <ImageView
+        android:id="@+id/phone_icon"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:contentDescription="@null"
+        android:background="@android:color/transparent"
+        android:scaleType="centerInside"/>
+
+      <TextView
+        style="@style/FlatButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="@string/call"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+      android:id="@+id/sms_btn_flat"
+      android:layout_width="0dp"
+      android:layout_weight="1"
+      android:layout_height="match_parent"
+      android:background="?attr/selectableItemBackground">
+
+    <ImageView
+      android:id="@+id/sms_icon"
+      android:layout_marginStart="16dp"
+      android:layout_marginLeft="16dp"
+      android:layout_marginTop="16dp"
+      android:layout_marginEnd="8dp"
+      android:layout_marginRight="8dp"
+      android:layout_width="32dp"
+      android:layout_height="32dp"
+      android:background="@android:color/transparent"
+      android:contentDescription="@null"
+      android:scaleType="centerInside"/>
 
     <TextView
-      android:id="@+id/sms_btn_flat"
       style="@style/FlatButton"
-      android:layout_width="0dp"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_weight="1"
+      android:layout_gravity="center_vertical"
       android:text="@string/text"/>
+
+    </LinearLayout>
 
   </LinearLayout>
 
